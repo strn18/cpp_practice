@@ -1,7 +1,7 @@
 #include <iostream>
 #include <queue>
 #define MAX 100
-
+// I renamed the repository.
 using namespace std;
 
 typedef struct{int r, c;} pos;
