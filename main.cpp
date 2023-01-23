@@ -1,40 +1,54 @@
 #include <iostream>
-#include <string>
-#define MAX 20
+#define MAX 50
 
 using namespace std;
 
-int R, C, answer = -1;
-int dr[4] = {-1, 1, 0, 0};
-int dc[4] = {0, 0, -1, 1};
-bool visited[26] = {false};
-string board[MAX];
+int N, M, count = 0;
+int board[MAX][MAX]; // 0: 빈 칸, 1: 벽, 2: 청소한 칸
+int dr[8] = {-1, 0, 1, 0, -1, 0, 1, 0}; // 북, 동, 남, 서
+int dc[8] = {0, 1, 0, -1, 0, 1, 0, -1};
 
-void dfs(int r, int c, int count);
+void clean(int r, int c, int d);
 
 int main(){
-  scanf("%d %d", &R, &C);
+  int first_r, first_c, first_d;
 
-  for(int i=0; i<R; i++)
-    cin >> board[i];
-  
-  dfs(0, 0, 0);
+  scanf("%d %d", &N, &M);
+  scanf("%d %d %d", &first_r, &first_c, &first_d);
+  for(int i=0; i<N; i++)
+    for(int j=0; j<M; j++)
+      scanf("%d", &board[i][j]);
 
-  printf("%d", answer);
+  clean(first_r, first_c, first_d);
+
+  printf("%d", count);
 
   return 0;
 }
 
-void dfs(int r, int c, int count){
-  visited[board[r][c]-'A'] = true;
-  answer = max(answer, count+1);
+void clean(int r, int c, int d){
+  int next_r, next_c, next_d;
+  bool flag = false;
 
-  for(int i=0; i<4; i++){
-    int nr = r+dr[i], nc = c+dc[i];
-    
-    if(0<=nr && nr<R && 0<=nc && nc<C)
-      if(!visited[board[nr][nc]-'A'])
-        dfs(nr, nc, count+1);
+  board[r][c] = 2;
+  count++;
+
+  while(1){
+    for(int i=d+3; i>=d; i--){
+      if(0<=r+dr[i] && r+dr[i]<N && 0<=c+dc[i] && c+dc[i]<M && board[r+dr[i]][c+dc[i]] == 0){
+        next_r = r+dr[i]; next_c = c+dc[i]; next_d = i%4;
+        flag = true;
+        break;
+      }
+    }
+
+    if(flag) break;
+
+    r += dr[d+2]; c += dc[d+2];
+    if(r<0 || r>=N || c<0 || c>=M || board[r][c] == 1)
+      break;
   }
-  visited[board[r][c]-'A'] = false;
+
+  if(flag)
+    clean(next_r, next_c, next_d);
 }
