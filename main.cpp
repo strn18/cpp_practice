@@ -1,82 +1,77 @@
 #include <iostream>
-#define MAX 500
+#include <deque>
+#define MAX 100
 
 using namespace std;
 
-int N, M, maximum = -1;
-int board[MAX][MAX];
-int dr[3] = {-1, 1, 0};
-int dc[3] = {0, 0, 1};
-bool visited[MAX][MAX] = {false};
+typedef struct{int r, c;} pos;
 
-void dfs(int r, int c, int count, int depth); // 지금까지 밟은 수 합은 count, 밟은 칸 개수는 depth개.
-void pink_t(int r, int c); // 분홍색 ㅜ 모양 도형
+int dr[4] = {0, 1, 0, -1};
+int dc[4] = {1, 0, -1, 0};
+
+void change_direction(char C, int* direction);
 
 int main(){
-  scanf("%d %d", &N, &M);
+  int N, K, L;
+  int direction = 0, count = 0;
+  int board[MAX][MAX] = {0};
+  char change_info[10001] = {0};
+  deque<pos> snake;
 
-  for(int i=0; i<N; i++)
-    for(int j=0; j<M; j++)
-      scanf("%d", &board[i][j]);
-
-  for(int i=0; i<N; i++){
-    for(int j=0; j<M; j++){
-      dfs(i, j, 0, 0); // 분홍색 도형 제외하고 4개의 도형을 놓는 경우를 따진다.
-      pink_t(i, j);
-    }
+  scanf("%d", &N);
+  scanf("%d", &K);
+  for(int i=0; i<K; i++){
+    int a, b;
+    scanf("%d %d", &a, &b);
+    board[a-1][b-1] = 1;
+  }
+  scanf("%d", &L);
+  for(int i=0; i<L; i++){
+    int X;
+    char C;
+    scanf("%d %c", &X, &C);
+    change_info[X] = C;
   }
 
-  printf("%d", maximum);
-  
+  snake.push_front({0, 0});
+
+  while(1){
+    int nr = snake.front().r;
+    int nc = snake.front().c;
+    count++;
+
+    if(change_info[count-1] != 0)
+      change_direction(change_info[count-1], &direction);
+
+    nr += dr[direction];
+    nc += dc[direction];
+
+    if(nr<0 || N<=nr || nc<0 || N<=nc || board[nr][nc] == 2)
+      break;
+
+    if(board[nr][nc] == 0){
+      pos tail = snake.back();
+      snake.pop_back();
+      board[tail.r][tail.c] = 0;
+    }
+
+    snake.push_front({nr, nc});
+    board[nr][nc] = 2;    
+  }
+
+  cout << count;
+
   return 0;
 }
 
-void dfs(int r, int c, int count, int depth){
-  visited[r][c] = true;
-  count += board[r][c];
-  depth++;
-
-  if(depth < 4){
-    for(int i=0; i<3; i++){
-      int nr = r+dr[i];
-      int nc = c+dc[i];
-      if(0<=nr && nr<N && 0<=nc && nc<M && !visited[nr][nc])
-        dfs(nr, nc, count, depth);
-    }
-  }
+void change_direction(char C, int* direction){
+  if(C == 'L')
+    (*direction)--;
   else
-    maximum = max(maximum, count);
+    (*direction)++;
 
-  visited[r][c] = false;
-}
-
-void pink_t(int r, int c){
-  int count;
-  int dr[2][4] = {{0, 0, 0, 1}, {0, 0, 0, -1}}; // dr[0]과 dc는 ㅜ 모양, dr[1]과 dc는 ㅗ 모양
-  int dc[4] = {0, 1, 2, 1};
-
-  for(int i=0; i<2; i++){ // 한 번은 dr와 dc를 그대로 더해주고, 한 번은 바꿔서 더해준다(점대칭)
-    for(int j=0; j<2; j++){ // 한 번은 dr값을 그대로 더해주고, 한 번은 부호를 바꿔서 더해준다(축 대칭)
-      count = 0;
-      for(int k=0; k<4; k++){
-        int nr = r;
-        int nc = c;
-
-        if(i==0){
-          nr += dr[j][k];
-          nc += dc[k];
-        }
-        else{
-          nr += dc[k];
-          nc += dr[j][k];
-        }
-
-        if(nr<0 || N<=nr || nc<0 || M<=nc) // 범위를 벗어났으면 도형을 놓을 수 없으니, 더 이상 볼 필요 없음
-          break;
-
-        count += board[nr][nc];
-      }
-      maximum = max(maximum, count);
-    }
-  }
+  if((*direction) < 0)
+    (*direction) += 4;
+  else if((*direction) > 3)
+    (*direction) -= 4;
 }
