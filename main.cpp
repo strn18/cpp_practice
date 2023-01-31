@@ -1,61 +1,56 @@
 #include <iostream>
-#include <queue>
-#define MAX 50
-#define INF 2500
+#include <string.h>
+#define MAX 100
+#define DEN 1000000000
 
 using namespace std;
 
-int board[MAX][MAX];
-int cost[MAX][MAX];
-int dr[4] = {-1, 1, 0, 0};
-int dc[4] = {0, 0, -1, 1};
+int dp[10][10][MAX+1][10];
 
-void dijkstra(int N);
+int DP(int left, int right, int i, int j);
 
 int main(){
-  int n;
+  int N;
+  long long count = 0;
 
-  scanf("%d", &n);
+  scanf("%d", &N);
+  
+  memset(dp, -1, 10*10*(MAX+1)*10*sizeof(int));
+  
+  for(int j=1; j<=9; j++)
+    count += DP(0, 9, N, j);
 
-  for(int i=0; i<n; i++){
-    for(int j=0; j<n; j++){
-      scanf("%1d", &board[i][j]);
-      cost[i][j] = INF;
-    }
-  }
-  cost[0][0] = 0;
-
-  dijkstra(n);
-
-  printf("%d", cost[n-1][n-1]);
+  printf("%lld", count % DEN);
 
   return 0;
 }
 
-void dijkstra(int N){
-  priority_queue<pair<int, pair<int, int>>> pq; // (-비용, (행, 열))
-  pq.push({0, {0, 0}});
+int DP(int left, int right, int i, int j){
+  if(dp[left][right][i][j] != -1) return dp[left][right][i][j];
 
-  while(!pq.empty()){
-    int cur_cost = -pq.top().first;
-    int cur_r = pq.top().second.first;
-    int cur_c = pq.top().second.second;
-    pq.pop();
-
-    if(cur_cost > cost[cur_r][cur_c]) continue;
-
-    for(int i=0; i<4; i++){
-      int next_r = cur_r + dr[i];
-      int next_c = cur_c + dc[i];
-
-      if(0<=next_r && next_r<N && 0<=next_c && next_c<N){
-        int next_cost = board[next_r][next_c] ? 0 : 1;
-
-        if(cur_cost + next_cost < cost[next_r][next_c]){
-          cost[next_r][next_c] = cur_cost + next_cost;
-          pq.push({-cost[next_r][next_c], {next_r, next_c}});
-        }
-      }
-    }
+  
+  if(right<left || (left==right && i>1) || right-left+1>i || j<left || right<j || i==0){
+    dp[left][right][i][j] = 0;
+    return dp[left][right][i][j];
   }
+  else if(right-left+1==i){
+    if(j==left || j==right) dp[left][right][i][j] = 1;
+    else dp[left][right][i][j] = 0;
+    return dp[left][right][i][j];
+  }
+  
+
+  if(left<j && j<right){
+    dp[left][right][i][j] = DP(left, right, i-1, j-1) + DP(left, right, i-1, j+1);
+  }
+  else if(j == left){
+    dp[left][right][i][j] = DP(left+1, right, i-1, j+1) + DP(left, right, i-1, j+1);
+  }
+  else{
+    dp[left][right][i][j] = DP(left, right-1, i-1, j-1) + DP(left, right, i-1, j-1);
+  }
+
+  dp[left][right][i][j] %= DEN;
+
+  return dp[left][right][i][j];
 }
