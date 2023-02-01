@@ -1,56 +1,49 @@
 #include <iostream>
-#include <string.h>
-#define MAX 100
-#define DEN 1000000000
+#include <stack>
+#define MAX 1000
 
 using namespace std;
 
-int dp[10][10][MAX+1][10];
-
-int DP(int left, int right, int i, int j);
-
 int main(){
-  int N;
-  long long count = 0;
+  int N, max_idx, max_len = 0;
+  int num[MAX], dp[MAX], prev_idx[MAX];
+  stack<int> st;
 
   scanf("%d", &N);
-  
-  memset(dp, -1, 10*10*(MAX+1)*10*sizeof(int));
-  
-  for(int j=1; j<=9; j++)
-    count += DP(0, 9, N, j);
 
-  printf("%lld", count % DEN);
+  for(int i=0; i<N; i++){
+    int max_dp = 0;
+    prev_idx[i] = -1;
+
+    scanf("%d", &num[i]);
+
+    for(int j=0; j<i; j++){
+      if(num[j] < num[i] && dp[j] > max_dp){
+        max_dp = dp[j];
+        prev_idx[i] = j;
+      }
+    }
+
+    dp[i] = max_dp+1;
+
+    if(dp[i] > max_len){
+      max_len = dp[i];
+      max_idx = i;
+    }
+  }
+
+  st.push(num[max_idx]);
+  while(prev_idx[max_idx] != -1){
+    st.push(num[prev_idx[max_idx]]);
+    max_idx = prev_idx[max_idx];
+  }
+
+  printf("%d\n", max_len);
+
+  while(!st.empty()){
+    printf("%d ", st.top());
+    st.pop();
+  }
 
   return 0;
-}
-
-int DP(int left, int right, int i, int j){
-  if(dp[left][right][i][j] != -1) return dp[left][right][i][j];
-
-  
-  if(right<left || (left==right && i>1) || right-left+1>i || j<left || right<j || i==0){
-    dp[left][right][i][j] = 0;
-    return dp[left][right][i][j];
-  }
-  else if(right-left+1==i){
-    if(j==left || j==right) dp[left][right][i][j] = 1;
-    else dp[left][right][i][j] = 0;
-    return dp[left][right][i][j];
-  }
-  
-
-  if(left<j && j<right){
-    dp[left][right][i][j] = DP(left, right, i-1, j-1) + DP(left, right, i-1, j+1);
-  }
-  else if(j == left){
-    dp[left][right][i][j] = DP(left+1, right, i-1, j+1) + DP(left, right, i-1, j+1);
-  }
-  else{
-    dp[left][right][i][j] = DP(left, right-1, i-1, j-1) + DP(left, right, i-1, j-1);
-  }
-
-  dp[left][right][i][j] %= DEN;
-
-  return dp[left][right][i][j];
 }
