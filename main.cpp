@@ -1,29 +1,86 @@
 #include <iostream>
-#define MAX 200
+#include <cstring>
+#define MAX 300
 
 using namespace std;
 
-int main(){
-  int N, longest = 0;
-  int kids[MAX+1], dp[MAX+1];
+int N, M;
+int dr[4] = {-1, 1, 0, 0};
+int dc[4] = {0, 0, -1, 1};
+int board[MAX][MAX];
+int next_board[MAX][MAX];
+bool visited[MAX][MAX];
 
-  scanf("%d", &N);
-  for(int i=1; i<=N; i++)
-    scanf("%d", &kids[i]);
-  
-  dp[1] = 1;
-  for(int i=2; i<=N; i++){
-    int max_dp = 0;
-    for(int j=1; j<i; j++)
-      if(kids[j] < kids[i] && dp[j] > max_dp)
-        max_dp = dp[j];
-    dp[i] = max_dp + 1;
+int check(void);
+void dfs(int r, int c);
+void melt(int r, int c);
+void copy_board(int from[][MAX], int to[][MAX]);
+
+int main(){
+  int pieces, years = 0;
+
+  scanf("%d %d", &N, &M);
+
+  for(int i=0; i<N; i++)
+    for(int j=0; j<M; j++)
+      scanf("%d", &board[i][j]);
+
+  while(true){
+    pieces = check();
+    if(pieces != 1) break;
+
+    years++;
+    copy_board(board, next_board);
+
+    for(int r=0; r<N; r++)
+      for(int c=0; c<M; c++)
+        if(board[r][c] > 0)
+          melt(r, c);
+
+    copy_board(next_board, board);
   }
 
-  for(int i=1; i<=N; i++)
-    longest = max(longest, dp[i]);
-  
-  printf("%d", N-longest);
+  if(pieces == 0)
+    printf("0");
+  else
+    printf("%d", years);
 
   return 0;
+}
+
+int check(void){
+  int count = 0;
+  memset(visited, false, MAX*MAX*sizeof(bool));
+
+  for(int r=0; r<N; r++){
+    for(int c=0; c<M; c++){
+      if(!visited[r][c] && board[r][c] > 0){
+        dfs(r, c);
+        count++;
+      }
+    }
+  }
+
+  return count;
+}
+
+void dfs(int r, int c){
+  visited[r][c] = true;
+
+  for(int i=0; i<4; i++)
+    if(!visited[r+dr[i]][c+dc[i]] && board[r+dr[i]][c+dc[i]] > 0)
+      dfs(r+dr[i], c+dc[i]);
+}
+
+void melt(int r, int c){
+  for(int i=0; i<4; i++)
+    if(board[r+dr[i]][c+dc[i]] == 0)
+      next_board[r][c]--;
+  next_board[r][c] = max(0, next_board[r][c]);
+}
+
+void copy_board(int from[][MAX], int to[][MAX]){
+  for(int r=0; r<N; r++)
+    for(int c=0; c<M; c++)
+      to[r][c] = from[r][c];
 }
