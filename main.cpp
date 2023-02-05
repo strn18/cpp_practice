@@ -1,86 +1,41 @@
 #include <iostream>
-#include <cstring>
-#define MAX 300
+#define MAX 50
 
 using namespace std;
 
-int N, M;
-int dr[4] = {-1, 1, 0, 0};
-int dc[4] = {0, 0, -1, 1};
-int board[MAX][MAX];
-int next_board[MAX][MAX];
-bool visited[MAX][MAX];
+bool visited[MAX][MAX] = {false};
+int N;
+int dr[4] = {0, 0, 1, -1};
+int dc[4] = {1, -1, 0, 0};
+double count = 0.0;
+double p[4];
 
-int check(void);
-void dfs(int r, int c);
-void melt(int r, int c);
-void copy_board(int from[][MAX], int to[][MAX]);
+void dfs(int r, int c, double cur_count, int n);
 
 int main(){
-  int pieces, years = 0;
-
-  scanf("%d %d", &N, &M);
-
-  for(int i=0; i<N; i++)
-    for(int j=0; j<M; j++)
-      scanf("%d", &board[i][j]);
-
-  while(true){
-    pieces = check();
-    if(pieces != 1) break;
-
-    years++;
-    copy_board(board, next_board);
-
-    for(int r=0; r<N; r++)
-      for(int c=0; c<M; c++)
-        if(board[r][c] > 0)
-          melt(r, c);
-
-    copy_board(next_board, board);
+  scanf("%d", &N);
+  for(int i=0; i<4; i++){
+    scanf("%lf", &p[i]);
+    p[i] /= 100;
   }
-
-  if(pieces == 0)
-    printf("0");
-  else
-    printf("%d", years);
-
+    
+  dfs(25, 25, 1.0, 0);
+    
+  printf("%.12f", count);
+    
   return 0;
 }
 
-int check(void){
-  int count = 0;
-  memset(visited, false, MAX*MAX*sizeof(bool));
+void dfs(int r, int c, double cur_count, int n){
+  if(n == N) count += cur_count;
+    
+  else{
+    visited[r][c] = true;
 
-  for(int r=0; r<N; r++){
-    for(int c=0; c<M; c++){
-      if(!visited[r][c] && board[r][c] > 0){
-        dfs(r, c);
-        count++;
-      }
-    }
+    for(int i=0; i<4; i++)
+      if(p[i] && !visited[r+dr[i]][c+dc[i]])
+        dfs(r+dr[i], c+dc[i], cur_count*p[i], n+1);
+        
+    visited[r][c] = false;
   }
-
-  return count;
-}
-
-void dfs(int r, int c){
-  visited[r][c] = true;
-
-  for(int i=0; i<4; i++)
-    if(!visited[r+dr[i]][c+dc[i]] && board[r+dr[i]][c+dc[i]] > 0)
-      dfs(r+dr[i], c+dc[i]);
-}
-
-void melt(int r, int c){
-  for(int i=0; i<4; i++)
-    if(board[r+dr[i]][c+dc[i]] == 0)
-      next_board[r][c]--;
-  next_board[r][c] = max(0, next_board[r][c]);
-}
-
-void copy_board(int from[][MAX], int to[][MAX]){
-  for(int r=0; r<N; r++)
-    for(int c=0; c<M; c++)
-      to[r][c] = from[r][c];
 }
