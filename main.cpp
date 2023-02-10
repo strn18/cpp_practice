@@ -1,45 +1,50 @@
 #include <iostream>
+#include <cmath>
 
 using namespace std;
 
-int bit_count(int bit); // bit에서 1비트 개수 구하기
-int bit_delete(int bit, int n); // bit에서 1비트 n개 없애기(왼쪽부터)
+int N, N_digit, count;
+bool broken[10] = {false};
+
+int get_digit(int n);
+void solve(int cur, int cur_digit);
 
 int main(){
-  int N, K, buy = 0;
+  int M, temp;
 
-  scanf("%d %d", &N, &K);
-
-  if(bit_count(N) > K){
-    N = bit_delete(N, K-1);
-
-    for(int i=0; 1; i++){
-      if((1<<i) >= N){
-        buy = (1<<i) - N;
-        break;
-      }
-    }
+  scanf("%d", &N);
+  scanf("%d", &M);
+  for(int i=0; i<M; i++){
+    scanf("%d", &temp);
+    broken[temp] = true;
   }
-  
-  printf("%d", buy);
+
+  N_digit = get_digit(N);
+  count = abs(N-100); // 처음 채널에서 +, -로만 이동
+  if(!broken[0])
+    count = min(count, N+1); // 0으로 간 후 +, -로만 이동
+
+  for(int i=1; i<=9 && count!=0; i++)
+    if(!broken[i])
+      solve(i, 1);
+
+  printf("%d", count);
 
   return 0;
 }
 
-int bit_count(int bit){
-  if(bit==0) return 0;
-  return bit%2 + bit_count(bit/2);
+int get_digit(int n){
+  for(int i=1; 1; i++)
+    if(n<pow(10, i))
+      return i;
 }
 
-int bit_delete(int bit, int n){
-  int count = 0;
+void solve(int cur, int cur_digit){
+  count = min(count, abs(N-cur)+cur_digit);
 
-  for(int i=25; count<n; i--){
-    if(bit & (1<<i)){
-      bit &= ~(1<<i);
-      count++;
-    }
-  }
+  if(cur_digit == N_digit+1) return;
 
-  return bit;
+  for(int i=0; i<=9; i++)
+    if(!broken[i])
+      solve(cur*10+i, cur_digit+1);
 }
