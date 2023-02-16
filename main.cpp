@@ -6,15 +6,14 @@
 
 using namespace std;
 
-int N;
 int dist[MAX+1][MAX+1];
 int group[MAX+1] = {0};
 
-void bfs(int start, int num);
+void bfs(int N, int start, int num);
 
 int main(){
-  int M, a, b, groups = 0;
-  int rep_num[MAX+1], rep_time[MAX+1];
+  int N, M, a, b, groups = 0;
+  int rep_num[MAX+1], longest_time[MAX+1];
 
   scanf("%d %d", &N, &M);
 
@@ -30,7 +29,7 @@ int main(){
 
   for(int i=1; i<=N; i++)
     if(group[i]==0)
-      bfs(i, ++groups);
+      bfs(N, i, ++groups);
 
   for(int k=1; k<=N; k++){
     for(int i=1; i<=N; i++){
@@ -43,23 +42,23 @@ int main(){
   }
 
   for(int i=1; i<=groups; i++)
-    rep_time[i] = INF;
-
+    longest_time[i] = INF;
+  
   for(int i=1; i<=N; i++){
-    int time = 0, group_num = group[i];
+    int cur_time = 0, cur_group_num = group[i];
 
     for(int j=1; j<=N; j++)
-      if(group[j] == group_num)
-        time += dist[i][j];
+      if(group[j] == cur_group_num)
+        cur_time = max(cur_time, dist[i][j]);
 
-    if(time < rep_time[group_num]){
-      rep_num[group_num] = i;
-      rep_time[group_num] = time;
+    if(cur_time < longest_time[cur_group_num]){
+      longest_time[cur_group_num] = cur_time;
+      rep_num[cur_group_num] = i;
     }
   }
 
   printf("%d\n", groups);
-
+  
   sort(rep_num+1, rep_num+1+groups);
 
   for(int i=1; i<=groups; i++)
@@ -68,7 +67,7 @@ int main(){
   return 0;
 }
 
-void bfs(int start, int num){
+void bfs(int N, int start, int num){
   queue<int> q;
   q.push(start);
   group[start] = num;
