@@ -1,41 +1,44 @@
 #include <iostream>
-#define MAX 400
-#define INF 2100000000
+#define MAX 1000000
 
 using namespace std;
 
-int dist[MAX+1][MAX+1];
+int arr[MAX], nge_idx[MAX];
 
 int main(){
-  int V, E, min_cycle;
+  int N;
 
-  scanf("%d %d", &V, &E);
+  scanf("%d", &N);
+  for(int i=0; i<N; i++)
+    scanf("%d", &arr[i]);
 
-  for(int i=1; i<=V; i++)
-    for(int j=1; j<=V; j++)
-      dist[i][j] = INF;
+  nge_idx[N-1] = -1;
+  for(int i=N-2; i>=0; i--){
+    int right = i+1;
+    
+    while(true){
+      if(arr[i] < arr[right])
+        nge_idx[i] = right;
 
-  for(int i=0; i<E; i++){
-    int a, b, c;
-    scanf("%d %d %d", &a, &b, &c);
-    dist[a][b] = c;
-  }
+      else if(arr[i] == arr[right])
+        nge_idx[i] = nge_idx[right];
 
-  for(int k=1; k<=V; k++){
-    for(int i=1; i<=V; i++){
-      if(dist[i][k] == INF) continue;
-      for(int j=1; j<=V; j++){
-        if(dist[k][j] == INF) continue;
-        dist[i][j] = min(dist[i][j], dist[i][k]+dist[k][j]);
+      else{
+        if( (nge_idx[right] == -1) || (arr[nge_idx[right]] > arr[i]) )
+          nge_idx[i] = nge_idx[right];
+
+        else{
+          right = nge_idx[right];
+          continue;
+        }
       }
+
+      break;
     }
   }
 
-  min_cycle = INF;
-  for(int i=1; i<=V; i++)
-    min_cycle = min(min_cycle, dist[i][i]);
-
-  printf("%d", (min_cycle==INF ? -1 : min_cycle));
+  for(int i=0; i<N; i++)
+    printf("%d ", ( (nge_idx[i] == -1) ? -1 : arr[nge_idx[i]]));  
   
   return 0;
 }
