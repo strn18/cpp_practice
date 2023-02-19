@@ -1,44 +1,24 @@
 #include <iostream>
-#define MAX 1000000
 
 using namespace std;
 
-int arr[MAX], nge_idx[MAX];
+long long pow_mod(int a, int b, int mod);
 
 int main(){
-  int N;
+  int A, B, C;
 
-  scanf("%d", &N);
-  for(int i=0; i<N; i++)
-    scanf("%d", &arr[i]);
+  scanf("%d %d %d", &A, &B, &C);
 
-  nge_idx[N-1] = -1;
-  for(int i=N-2; i>=0; i--){
-    int right = i+1;
-    
-    while(true){
-      if(arr[i] < arr[right])
-        nge_idx[i] = right;
-
-      else if(arr[i] == arr[right])
-        nge_idx[i] = nge_idx[right];
-
-      else{
-        if( (nge_idx[right] == -1) || (arr[nge_idx[right]] > arr[i]) )
-          nge_idx[i] = nge_idx[right];
-
-        else{
-          right = nge_idx[right];
-          continue;
-        }
-      }
-
-      break;
-    }
-  }
-
-  for(int i=0; i<N; i++)
-    printf("%d ", ( (nge_idx[i] == -1) ? -1 : arr[nge_idx[i]]));  
+  printf("%d", pow_mod(A, B, C));
   
   return 0;
+}
+
+long long pow_mod(int a, int b, int mod){
+  if(b == 0) return 1;
+
+  if(b%2 == 0)
+    return pow_mod(a, b/2, mod) * pow_mod(a, b/2, mod) % mod;
+  else
+    return (pow_mod(a, (b-1)/2, mod) * pow_mod(a, (b-1)/2, mod) % mod) * a % mod;
 }
