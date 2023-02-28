@@ -53,3 +53,7 @@ void bfs(int start, int n){
     }
   }
 }
+
+/*
+분리집합 문제인데 bfs로 풀어봤다. 
+*/
