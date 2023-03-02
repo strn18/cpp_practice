@@ -1,45 +1,56 @@
 #include <iostream>
-#define MAX 1000000
+#include <algorithm>
+#define MAX 200000
 
 using namespace std;
 
-long long N, M;
-int tree[MAX];
+int N, C;
+int house[MAX];
 
-int binary_search(int start, int end);
-long long get_tree(int height);
+bool check(int d);
 
 int main(){
-  int max_height = 0;
+  int ans = 0;
+  
+  scanf("%d %d", &N, &C);
+  for(int i=0; i<N; i++)
+    scanf("%d", &house[i]);
+  
+  sort(house, house+N);
 
-  scanf("%lld %lld", &N, &M);
-  for(int i=0; i<N; i++){
-    scanf("%d", &tree[i]);
-    max_height = max(max_height, tree[i]);
+  int start = 1, end = (house[N-1]-house[0]) / (C-1);
+  while(start<=end){
+    int mid = (start+end)/2;
+
+    if(check(mid)){
+      ans = max(ans, mid);
+      start = mid+1;
+    }
+    else
+      end = mid-1;
   }
 
-  printf("%d", binary_search(0, max_height));
-
+  printf("%d", ans);
+  
   return 0;
 }
 
-int binary_search(int start, int end){
-  if(start == end) return get_tree(start) >= M ? start : -1;
+bool check(int d){
+  int prev_house_idx = 0;
 
-  int mid = (start+end)/2;
+  for(int i=1; i<C; i++){
+    bool flag = false;
+    
+    for(int j=prev_house_idx+1; j<N; j++){
+      if(house[j]-house[prev_house_idx] >= d){
+        prev_house_idx = j;
+        flag = true;
+        break;
+      }
+    }
 
-  if(get_tree(mid) < M)
-    return binary_search(start, mid);
-  else
-    return max(mid, binary_search(mid+1, end));
-}
+    if(!flag) return false;
+  }
 
-long long get_tree(int height){
-  long long count = 0;
-
-  for(int i=0; i<N; i++)
-    if(tree[i] > height)
-      count += (tree[i] - height);
-
-  return count;
+  return true;
 }
