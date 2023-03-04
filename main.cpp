@@ -1,27 +1,23 @@
 #include <iostream>
-#define MAX 10000
 
 using namespace std;
 
-int K, N;
-long long lan[MAX];
+int N, k;
 
-bool check(long long length);
+long long count_less_than(int n);
 
 int main(){
-  long long start = 1, end = 0, ans = 0;
+  int start, end;
+  long long ans;
 
-  scanf("%d %d", &K, &N);
+  scanf("%d %d", &N, &k);
 
-  for(int i=0; i<K; i++){
-    scanf("%lld", &lan[i]);
-    end = max(end, lan[i]);
-  }
-
+  start = 1, end = k; // B[k] <= k
+  
   while(start <= end){
-    long long mid = (start+end)/2;
+    int mid = (start+end)/2;
 
-    if(check(mid)){
+    if(count_less_than(mid) < k){
       ans = mid;
       start = mid+1;
     }
@@ -29,16 +25,16 @@ int main(){
       end = mid-1;
   }
 
-  printf("%lld", ans);
-  
+  printf("%d", ans);
+
   return 0;
 }
 
-bool check(long long length){
+long long count_less_than(int n){
   long long count = 0;
 
-  for(int i=0; i<K; i++)
-    count += lan[i]/length;
-  
-  return (count >= N) ? true : false;
+  for(int i=1; i<=N; i++)
+    count += min(N, (n-1)/i);
+
+  return count;
 }
