@@ -48,3 +48,8 @@ bool check(int k){
 
   return (count <= M ? true : false);
 }
+
+/*
+2343이랑 거의 똑같은 문제. 다만, 2343에서는 이진탐색 범위를 sum(lec)/M ~ sum(lec)로 잡았었는데, 여기서는 max(spend) ~ sum(spend)로 잡았다.
+사실 이게 맞음. 하루에 쓰는 금액인 spend 중, 최댓값 보다는 k(인출금액)가 반드시 커야한다. 그러므로 최솟값은 max(spend)가 된다.
+*/
