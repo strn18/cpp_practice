@@ -1,46 +1,47 @@
 #include <iostream>
-#define MAX 100000
-#define INF 2100000000
+#define MAX 10000
 
 using namespace std;
 
 int N, M;
-int time[MAX];
+int budget[MAX];
 
-bool check(long long t);
+bool check(int limit);
 
 int main(){
-  long long start = INF, end, ans;
+  int ans, start, end = 0;
 
-  scanf("%d %d", &N, &M);
+  scanf("%d", &N);
   for(int i=0; i<N; i++){
-    scanf("%d", &time[i]);
-    start = min(start, (long long)time[i]);
+    scanf("%d", &budget[i]);
+    end = max(end, budget[i]);
   }
-  end = start*M;
-  ans = end;
+  scanf("%d", &M);
+
+  start = M/N;
+  ans = start;
 
   while(start <= end){
-    long long mid = (start+end)/2;
+    int mid = (start+end)/2;
 
     if(check(mid)){
       ans = mid;
-      end = mid-1;
+      start = mid+1;
     }
     else
-      start = mid+1;
+      end = mid-1;
   }
 
-  printf("%lld", ans);
+  printf("%d", ans);
 
   return 0;
 }
 
-bool check(long long t){
-  long long count = 0;
+bool check(int limit){
+  int count = 0;
 
   for(int i=0; i<N; i++)
-    count += t/time[i];
+    count += min(budget[i], limit);
   
-  return (count >= M ? true : false);
+  return (count <= M ? true : false);
 }

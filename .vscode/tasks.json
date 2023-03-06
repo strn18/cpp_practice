@@ -63,17 +63,29 @@
                 "/C",
                 "${fileDirname}\\${fileBasenameNoExtension}"
             ]
-        },
+        }/*,
         {
-            "type": "cmake",
-            "label": "CMake: build",
-            "command": "build",
-            "targets": [
-                ""
+            "type": "cppbuild",
+            "label": "C/C++: g++.exe 활성 파일 빌드",
+            "command": "C:/mingw64/bin/g++.exe",
+            "args": [
+                "-fdiagnostics-color=always",
+                "-g",
+                "${file}",
+                "-o",
+                "${fileDirname}\\${fileBasenameNoExtension}.exe"
             ],
-            "group": "build",
-            "problemMatcher": [],
-            "detail": "CMake template build task"
-        }
+            "options": {
+                "cwd": "C:/mingw64/bin"
+            },
+            "problemMatcher": [
+                "$gcc"
+            ],
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            },
+            "detail": "컴파일러: C:/mingw64/bin/g++.exe"
+        }*/
     ]
 }
