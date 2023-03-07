@@ -43,3 +43,7 @@ bool check_color(int r, int c, int n, int color){
         return false;
   return true;
 }
+
+/*
+1780이랑 거의 똑같은 분할 정복 문제.
+*/
