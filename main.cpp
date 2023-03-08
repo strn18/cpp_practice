@@ -1,45 +1,71 @@
 #include <iostream>
-#define MAX 150
+#include <vector>
+#define MAX 5
+#define MOD 1000
 
 using namespace std;
 
-int paper[MAX][MAX];
-int count[2] = {0};
+int N;
+vector<vector<int>> matrix;
 
-void solve(int r, int c, int n);
-bool check_color(int r, int c, int n, int color);
+vector<vector<int>> mat_pow(long long b);
+vector<vector<int>> mat_mul(vector<vector<int>> a, vector<vector<int>> b);
 
 int main(){
-  int N;
+  int temp;
+  long long B;
 
-  scanf("%d", &N);
-  for(int i=0; i<N; i++)
+  scanf("%d %lld", &N, &B);
+  for(int i=0; i<N; i++){
+    vector<int> v;
+
+    for(int j=0; j<N; j++){
+      scanf("%d", &temp);
+      v.push_back(temp % MOD);
+    }
+
+    matrix.push_back(v);
+  }
+
+  vector<vector<int>> result = mat_pow(B);
+
+  for(int i=0; i<N; i++){
     for(int j=0; j<N; j++)
-      scanf("%d", &paper[i][j]);
-  
-  solve(0, 0, N);
-
-  for(int i=0; i<2; i++)
-    printf("%d\n", count[i]);
+      printf("%d ", result[i][j]);
+    printf("\n");
+  }
 
   return 0;
 }
 
-void solve(int r, int c, int n){
-  int color = paper[r][c];
+vector<vector<int>> mat_pow(long long b){
+  if(b==1) return matrix;
 
-  if(check_color(r, c, n, color))
-    count[color]++;
+  vector<vector<int>> half = mat_pow(b/2);
+
+  if(b%2)
+    return mat_mul(mat_mul(half, half), matrix);
   else
-    for(int i=r; i<r+n; i+=(n/2))
-      for(int j=c; j<c+n; j+=(n/2))
-        solve(i, j, n/2);
+    return mat_mul(half, half);
 }
 
-bool check_color(int r, int c, int n, int color){
-  for(int i=r; i<r+n; i++)
-    for(int j=c; j<c+n; j++)
-      if(paper[i][j] != color)
-        return false;
-  return true;
+vector<vector<int>> mat_mul(vector<vector<int>> a, vector<vector<int>> b){
+  vector<vector<int>> result;
+
+  for(int r=0; r<N; r++){
+    vector<int> row;
+
+     for(int i=0; i<N; i++){
+      int count = 0;
+
+      for(int j=0; j<N; j++)
+        count += (a[r][j] * b[j][i]);
+
+      row.push_back(count % MOD);
+     }
+    
+    result.push_back(row);
+  }
+
+  return result;
 }
