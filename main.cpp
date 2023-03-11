@@ -1,55 +1,68 @@
 #include <iostream>
-#define MAX 500000
+#include <cmath>
+#define MAX 20
 
 using namespace std;
 
-int K, A[MAX];
+long long filled = 0; // 채운 총 부피. 이 값이 L*W*H와 같아야 상자를 다 채운 것.
+int cube_count = 0;
+int cube[MAX];
 
-void merge_sort(int p, int r);
-void merge(int p, int q, int r);
+void fill_box(long long L, long long W, long long H);
 
-int main(){
+int main(){  
+  long long L, W, H;
   int N;
 
-  scanf("%d %d", &N, &K);
-  for(int i=0; i<N; i++)
-    scanf("%d", &A[i]);
+  scanf("%lld %lld %lld %d", &L, &W, &H, &N);
   
-  merge_sort(0, N-1);
+  for(int i=0; i<N; i++){
+    int A, B;
+    scanf("%d %d", &A, &B);
+    cube[A] = B;
+  }
 
-  if(K > 0) printf("-1");
+  fill_box(L, W, H);
+  
+  printf("%d", (filled == (L*W*H) ? cube_count : -1));
 
   return 0;
 }
 
-void merge_sort(int p, int r){
-  if(p < r){
-    int q = (p+r)/2;
-    merge_sort(p, q);
-    merge_sort(q+1, r);
-    merge(p, q, r);
-  }
-}
+void fill_box(long long L, long long W, long long H){
+  if(!L || !W || !H) return;
 
-void merge(int p, int q, int r){
-  int i = p, j = q+1, t = 0;
-  int temp[MAX];
+  for(int i=MAX-1; i>=0; i--){
+    if(cube[i]){
+      long long edge = pow(2, i);
 
-  while(i<=q && j<=r){
-    if(A[i] <= A[j])
-      temp[t++] = A[i++];
-    else
-      temp[t++] = A[j++];
-  }
+      if(edge > L || edge > W || edge > H) continue;
 
-  while(i<=q)
-    temp[t++] = A[i++];
-  while(j<=r)
-    temp[t++] = A[j++];
+      long long L_use = L/edge, W_use = W/edge;
+      long long max_use = L_use * W_use;
+      int L_mod = L%edge, W_mod = W%edge;      
 
-  i = p, t = 0;
-  while(i<=r){
-    A[i++] = temp[t++];
-    if(!(--K)) printf("%d", temp[t-1]);
+      if(cube[i] >= max_use){
+        filled += max_use * (edge*edge*edge);
+        cube_count += max_use;
+        cube[i] -= max_use;
+      }
+      else{
+        int cubes = cube[i];
+        filled += cube[i] * (edge*edge*edge);
+        cube_count += cube[i];
+        cube[i] = 0;
+
+        fill_box(edge, (W_use-(cubes%W_use))*edge, edge);
+        fill_box((L_use-(cubes/W_use + 1))*edge, W_use*edge, edge);
+      }
+
+      fill_box(L_mod, W, edge);
+      fill_box(L-L_mod, W_mod, edge);
+
+      fill_box(L, W, H-edge);
+
+      return;
+    }
   }
 }
