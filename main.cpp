@@ -1,73 +1,74 @@
 #include <iostream>
-#include <cmath>
-#define ll long long
-#define MAX 50
+#include <string>
+#include <queue>
 
 using namespace std;
 
-ll R, C;
-int d;
-int num[MAX];
+int ans = 0;
+int dr[4] = {-1, 1, 0, 0}, dc[4] = {0, 0, -1, 1};
+int seven_board[5][5] = {0};
+string board[5];
 
-void find_pos(ll r, ll c, ll len, int depth);
-void find_num(ll r, ll c, ll len, int depth);
+void combination(int num, int doyeon, int princess);
+bool check(int r, int c);
 
 int main(){
-  ll x, y, max_len;
+  for(int i=0; i<5; i++)
+    cin >> board[i];
 
-  scanf("%d", &d);
-  max_len = pow(2, d);
-
-  for(int i=0; i<d; i++)
-    scanf("%1d", &num[i]);
+  for(int i=0; i<19; i++)
+    combination(i, 0, 0);
   
-  find_pos(0, 0, max_len, 0);
-
-  scanf("%lld %lld", &x, &y);
-  R -= y; C += x;
-
-  if(0<=R && R<max_len && 0<=C && C<max_len){
-    find_num(R, C, max_len, 0);    
-    for(int i=0; i<d; i++)
-      printf("%d", num[i]);  
-  }
-  else
-    printf("-1");
+  printf("%d", ans);
 
   return 0;
 }
 
-void find_pos(ll r, ll c, ll len, int depth){
-  if(len == 1){
-    R = r; C = c;
-    return;
+void combination(int num, int doyeon, int princess){
+  int r = num/5, c = num%5;
+
+  if(board[r][c] == 'Y') doyeon++;
+  if(doyeon > 3) return;
+
+  seven_board[r][c] = 1;
+
+  if(++princess == 7){
+    if(check(r, c))
+      ans++;
+  }
+  else{
+    for(int i=num+1; i<25; i++)
+      combination(i, doyeon, princess);
   }
 
-  len /= 2;
-
-  if(num[depth] == 1)
-    find_pos(r, c+len, len, depth+1);
-  else if(num[depth] == 2)
-    find_pos(r, c, len, depth+1);
-  else if(num[depth] == 3)
-    find_pos(r+len, c, len, depth+1);
-  else
-    find_pos(r+len, c+len, len, depth+1);
+  seven_board[r][c] = 0;
 }
 
-void find_num(ll r, ll c, ll len, int depth){
-  if(len == 1) return;
+bool check(int r, int c){
+  queue<pair<int, int>> Q;
+  bool visited[5][5] = {false};
+  int count = 0;
 
-  len /= 2;
+  Q.push({r, c});
+  visited[r][c] = true;
+  count++;
 
-  if(r<len && c>=len)
-    num[depth] = 1;
-  else if(r<len && c<len)
-    num[depth] = 2;
-  else if(r>=len && c<len)
-    num[depth] = 3;
-  else
-    num[depth] = 4;
-  
-  find_num(r%len, c%len, len, depth+1);
+  while(!Q.empty()){
+    int cur_r = Q.front().first, cur_c = Q.front().second;
+    Q.pop();
+
+    for(int i=0; i<4; i++){
+      int next_r = cur_r+dr[i], next_c = cur_c+dc[i];
+      
+      if(0<=next_r && next_r<5 && 0<=next_c && next_c<5){
+        if(seven_board[next_r][next_c] && !visited[next_r][next_c]){
+          Q.push({next_r, next_c});
+          visited[next_r][next_c] = true;
+          count++;
+        }
+      }
+    }
+  }
+
+  return (count == 7 ? true : false);
 }
