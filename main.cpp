@@ -1,41 +1,97 @@
 #include <iostream>
-#define ll long long
+#include <algorithm>
+#define MAX 100000
 
 using namespace std;
 
+int arr[MAX];
+
+bool binary_search(int left, int right, int num);
+
 int main(){
-  ll N, count = 0;
-  ll num[6], min_num[3];
+  int N, M, num;
 
   scanf("%d", &N);
 
-  min_num[0] = 51;
-  for(int i=0; i<6; i++){
-    scanf("%lld", &num[i]);
-    min_num[0] = min(min_num[0], num[i]);
-  }
+  for(int i=0; i<N; i++)
+    scanf("%d", &arr[i]);
   
-  if(N==1){
-    ll max_num = 0;
-    for(int i=0; i<6; i++){
-      count += num[i];
-      max_num = max(max_num, num[i]);
-    }
-    count -= max_num;
-  }
-  else{
-    int a = min(num[0], num[5]);
-    int b = min(num[1], num[4]);
-    int c = min(num[2], num[3]);
-    min_num[1] = min(min(a+b, a+c), b+c);
-    min_num[2] = a+b+c;
+  sort(arr, arr+N);
 
-    count += (min_num[0]*(N-2)*(N-2)*5);
-    count += (min_num[1]*(N-2)*8 + min_num[0]*(N-2)*4);
-    count += (min_num[2]*4 + min_num[1]*4);
+  scanf("%d", &M);
+  for(int i=0; i<M; i++){
+    scanf("%d", &num);
+    printf("%d\n", binary_search(0, N-1, num) ? 1 : 0);
   }
-
-  printf("%lld", count);
 
   return 0;
 }
+
+bool binary_search(int left, int right, int num){
+  if(left == right) return arr[left] == num;
+
+  int mid = (left+right)/2;
+
+  if(num == arr[mid]) return true;
+  else if(num < arr[mid]) return binary_search(left, mid, num);
+  else return binary_search(mid+1, right, num);
+}
+
+/*
+#include <iostream>
+#define MAX 50
+
+using namespace std;
+
+int N, L, R;
+int dr[4] = {-1, 1, 0, 0}, dc[4] = {0, 0, -1, 1};
+int po[MAX][MAX], group[MAX][MAX];
+int group_po[1300], group_co[1300];
+int groups = 0;
+
+void border(int r, int c, int group_num);
+int absolute(int a, int b);
+
+int main(){
+  int days = 0;
+
+  scanf("%d %d %d", &N, &L, &R);
+  for(int i=0; i<N; i++)
+    for(int j=0; j<N; j++)
+      scanf("%d", &po[i][j]);
+
+  while(true){
+    for(int i=0; i<N; i++)
+      for(int j=0; j<N; j++)
+        border(i, j, groups+1);
+    
+    if(groups == 0) break;
+
+    days++;
+
+    for(int i=1; i<=groups; i++){
+      group_po[i] /= group_co[i];
+    }
+
+    for(int i=0; i<N; i++){
+      for(int j=0; j<N; j++){
+        if(group[i][j])
+          po[i][j] = group_po[group[i][j]];
+        group[i][j] = 0;
+      }
+    }
+  }
+
+  printf("%d", days);
+
+  return 0;
+}
+
+void border(int r, int c, int group_num){
+  
+}
+
+int absolute(int a, int b){
+  return (a-b>=0 ? a-b : b-a);
+}
+*/
