@@ -1,90 +1,96 @@
 #include <iostream>
 #include <queue>
-#define MAX_N 50
-#define MAX_G 2510
+#define MAX 50
 
 using namespace std;
 
-int N, L, R;
+int R, C;
 int dr[4] = {-1, 1, 0, 0}, dc[4] = {0, 0, -1, 1};
-int po[MAX_N][MAX_N], group[MAX_N][MAX_N];
-int group_po[MAX_G], group_co[MAX_G];
-int groups = 0;
+char map[MAX][MAX];
+queue<pair<int, int>> water, sonic;
 
-void bfs(int r, int c, int n);
-int absolute(int a, int b);
+void water_move();
+int sonic_move();
 
 int main(){
-  int days = 0;
+  int ret, minutes = 0;
 
-  scanf("%d %d %d", &N, &L, &R);
-  for(int i=0; i<N; i++)
-    for(int j=0; j<N; j++)
-      scanf("%d", &po[i][j]);
+  scanf("%d %d", &R, &C);
 
-  while(true){
-    for(int i=0; i<N; i++)
-      for(int j=0; j<N; j++)
-        group[i][j] = 0;
+  for(int i=0; i<R; i++){
+    for(int j=0; j<C; j++){
+      cin >> map[i][j];
 
-    for(int i=1; i<=groups; i++){
-      group_po[i] = 0;
-      group_co[i] = 0;
+      if(map[i][j] == '*')
+        water.push({i, j});
+
+      else if(map[i][j] == 'S')
+        sonic.push({i, j});
     }
-
-    groups = 0;
-
-    for(int i=0; i<N; i++)
-      for(int j=0; j<N; j++)
-        if(group[i][j] == 0)
-          bfs(i, j, ++groups);
-    
-    if(groups == N*N) break;
-
-    days++;
-
-    for(int i=1; i<=groups; i++)
-      group_po[i] /= group_co[i];
-
-    for(int i=0; i<N; i++)
-      for(int j=0; j<N; j++)
-        po[i][j] = group_po[group[i][j]];
   }
 
-  printf("%d", days);
+  while(true){
+    minutes++;
+
+    water_move();
+    ret = sonic_move();
+
+    if(ret == 0){
+      printf("KAKTUS");
+      return 0;
+    }
+    else if(ret == 2) break;
+  }
+
+  printf("%d", minutes);
 
   return 0;
 }
 
-void bfs(int r, int c, int n){
-  queue<pair<int, int>> q;
-  group[r][c] = n;
-  group_po[n] += po[r][c];
-  group_co[n]++;
-  q.push({r, c});
+void water_move(){
+  int T = water.size();
 
-  while(!q.empty()){
-    int cur_r = q.front().first;
-    int cur_c = q.front().second;
-    q.pop();
+  for(int t=0; t<T; t++){
+    int r = water.front().first;
+    int c = water.front().second;
+    water.pop();
 
     for(int i=0; i<4; i++){
-      int nr = cur_r+dr[i];
-      int nc = cur_c+dc[i];
-
-      if(nr<0 || N<=nr || nc<0 || N<=nc || group[nr][nc]!=0) continue;
-
-      int diff = absolute(po[cur_r][cur_c], po[nr][nc]);
-      if(L<=diff && diff<=R){
-        group[nr][nc] = n;
-        group_po[n] += po[nr][nc];
-        group_co[n]++;
-        q.push({nr, nc});
+      int nr = r+dr[i];
+      int nc = c+dc[i];
+      
+      if(0<=nr && nr<R && 0<=nc && nc<C){
+        if(map[nr][nc]=='.' || map[nr][nc]=='S'){
+          map[nr][nc] = '*';
+          water.push({nr, nc});
+        }
       }
     }
   }
 }
 
-int absolute(int a, int b){
-  return (a-b>=0 ? a-b : b-a);
+int sonic_move(){
+  int T = sonic.size();
+
+  for(int t=0; t<T; t++){
+    int r = sonic.front().first;
+    int c = sonic.front().second;
+    sonic.pop();
+
+    for(int i=0; i<4; i++){
+      int nr = r+dr[i];
+      int nc = c+dc[i];
+
+      if(0<=nr && nr<R && 0<=nc && nc<C){
+        if(map[nr][nc] == 'D') return 2;
+
+        if(map[nr][nc] == '.'){
+          map[nr][nc] = 'S';
+          sonic.push({nr, nc});
+        }
+      }
+    }
+  }
+
+  return (sonic.empty() ? 0 : 1);
 }
