@@ -1,31 +1,46 @@
 #include <iostream>
-#include <algorithm>
-#define MAX 100000
+#define MAX 500
 
 using namespace std;
 
-pair<int, int> p[MAX];
+int N;
+bool dist[MAX+1][MAX+1] = {false};
 
-bool compare(pair<int, int> a, pair<int, int> b){
-  if(a.second != b.second) return a.second < b.second;
-  else return a.first < b.first;
-}
+bool check(int start);
 
 int main(){
-  int N, a, b;
+  int M, a, b, count = 0;
 
-  scanf("%d", &N);
+  scanf("%d %d", &N, &M);
 
-  for(int i=0; i<N; i++){
+  for(int i=0; i<M; i++){
     scanf("%d %d", &a, &b);
-    p[i].first = a;
-    p[i].second = b;
+    dist[a][b] = true;
   }
 
-  sort(p, p+N, compare);
+  for(int k=1; k<=N; k++){
+    for(int i=1; i<=N; i++){
+      if(!dist[i][k]) continue;
 
-  for(int i=0; i<N; i++)
-    printf("%d %d\n", p[i].first, p[i].second);
+      for(int j=1; j<=N; j++)
+        if(dist[k][j])
+          dist[i][j] = true;
+    }
+  }
+
+  for(int i=1; i<=N; i++)
+    if(check(i)) count++;
+
+  printf("%d", count);
 
   return 0;
+}
+
+bool check(int start){
+  for(int i=1; i<=N; i++){
+    if(i==start) continue;
+    if(!dist[start][i] && !dist[i][start]) return false;
+  }
+  
+  return true;
 }
