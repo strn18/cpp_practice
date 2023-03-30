@@ -1,37 +1,47 @@
 #include <iostream>
-#define MAX 2000
+#include <string>
+#define MAX 40
 
 using namespace std;
 
-int num[MAX+1];
-int dp[MAX+1][MAX+1];
+int messi_len[MAX+1];
+string MESSI = " Messi";
+string GIMOSSI = " Gimossi";
 
-int is_palin(int i, int j);
+void find_messi(int n, int m);
 
 int main(){
-  int N, M, S, E;
+  int M, N;
 
-  fill_n(dp[0], (MAX+1)*(MAX+1), -1);
-
-  scanf("%d", &N);
-  for(int i=1; i<=N; i++)
-    scanf("%d", &num[i]);
+  messi_len[0] = 7;
+  messi_len[1] = 5;
+  for(int i=2; i<=MAX; i++)
+    messi_len[i] = messi_len[i-1]+1+messi_len[i-2];
 
   scanf("%d", &M);
-  while(M--){
-    scanf("%d %d", &S, &E);
-
-    printf("%d\n", is_palin(S, E));
-  }
   
+  for(int i=1; i<=MAX; i++){
+    if(messi_len[i] >= M){
+      N = i;
+      break;
+    }
+  }
+
+  find_messi(N, M);
+
   return 0;
 }
 
-int is_palin(int i, int j){
-  if(dp[i][j] != -1) return dp[i][j];
+void find_messi(int n, int m){
+  if(n<=1){
+    printf("%c", (n==1 ? MESSI[m] : GIMOSSI[m]));
+    return;
+  }
 
-  if(j-i+1 <= 3) return dp[i][j] = (num[i] == num[j] ? 1 : 0);
-
-  if(num[i] == num[j] && is_palin(i+1, j-1)) return dp[i][j] = 1;
-  else return dp[i][j] = 0;  
+  if(m <= messi_len[n-1])
+    find_messi(n-1, m);
+  else if(m == messi_len[n-1]+1)
+    printf("Messi Messi Gimossi");
+  else
+    find_messi(n-2, m-(messi_len[n-1]+1));
 }
