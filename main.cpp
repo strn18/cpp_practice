@@ -1,47 +1,35 @@
 #include <iostream>
-#include <string>
-#define MAX 40
+#include <vector>
 
 using namespace std;
 
-int messi_len[MAX+1];
-string MESSI = " Messi";
-string GIMOSSI = " Gimossi";
+vector<int> people;
 
-void find_messi(int n, int m);
+void kill(int K, int start);
 
 int main(){
-  int M, N;
+  int N, K;
 
-  messi_len[0] = 7;
-  messi_len[1] = 5;
-  for(int i=2; i<=MAX; i++)
-    messi_len[i] = messi_len[i-1]+1+messi_len[i-2];
+  scanf("%d %d", &N, &K);
 
-  scanf("%d", &M);
+  for(int i=1; i<=N; i++)
+    people.push_back(i);
   
-  for(int i=1; i<=MAX; i++){
-    if(messi_len[i] >= M){
-      N = i;
-      break;
-    }
-  }
-
-  find_messi(N, M);
+  printf("<");
+  kill(K, 0);
+  printf(">");
 
   return 0;
 }
 
-void find_messi(int n, int m){
-  if(n<=1){
-    printf("%c", (n==1 ? MESSI[m] : GIMOSSI[m]));
-    return;
-  }
+void kill(int K, int start){
+  int target = (start+K-1)%people.size();
 
-  if(m <= messi_len[n-1])
-    find_messi(n-1, m);
-  else if(m == messi_len[n-1]+1)
-    printf("Messi Messi Gimossi");
-  else
-    find_messi(n-2, m-(messi_len[n-1]+1));
+  printf("%d", people[target]);
+  people.erase(people.begin()+target);
+
+  if(people.empty()) return;
+
+  printf(", ");
+  kill(K, target%people.size());
 }
