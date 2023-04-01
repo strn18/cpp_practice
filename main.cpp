@@ -1,35 +1,32 @@
 #include <iostream>
-#include <vector>
 
 using namespace std;
 
-vector<int> people;
+int comb[30][30] = {0};
 
-void kill(int K, int start);
+int combination(int n, int r){
+  // return nCr
 
-int main(){
-  int N, K;
+  if(comb[n][r]) return comb[n][r];
 
-  scanf("%d %d", &N, &K);
+  if(n == r) return comb[n][r] = 1;
+  if(r == 1) return comb[n][r] = n;
 
-  for(int i=1; i<=N; i++)
-    people.push_back(i);
-  
-  printf("<");
-  kill(K, 0);
-  printf(">");
-
-  return 0;
+  return comb[n][r] = combination(n-1, r-1) + combination(n-1, r);
 }
 
-void kill(int K, int start){
-  int target = (start+K-1)%people.size();
+int main(){
+  int T;
 
-  printf("%d", people[target]);
-  people.erase(people.begin()+target);
+  scanf("%d", &T);
 
-  if(people.empty()) return;
+  while(T--){
+    int N, M;
 
-  printf(", ");
-  kill(K, target%people.size());
+    scanf("%d %d", &N, &M);
+
+    printf("%d\n", combination(M, N));
+  }
+
+  return 0;
 }
