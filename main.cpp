@@ -1,32 +1,47 @@
 #include <iostream>
+#define MAX 100000
 
 using namespace std;
 
-int comb[30][30] = {0};
+int N, S;
+int num[MAX], sum[MAX] = {0};
 
-int combination(int n, int r){
-  // return nCr
-
-  if(comb[n][r]) return comb[n][r];
-
-  if(n == r) return comb[n][r] = 1;
-  if(r == 1) return comb[n][r] = n;
-
-  return comb[n][r] = combination(n-1, r-1) + combination(n-1, r);
-}
+bool check(int L);
 
 int main(){
-  int T;
+  scanf("%d %d", &N, &S);
 
-  scanf("%d", &T);
+  for(int i=0; i<N; i++)
+    scanf("%d", &num[i]);
+  
+  sum[0] = num[0];
+  for(int i=1; i<N; i++)
+    sum[i] = sum[i-1] + num[i];
 
-  while(T--){
-    int N, M;
+  int low = 1, high = N;
+  int ans = 0;
 
-    scanf("%d %d", &N, &M);
+  while(low <= high){
+    int mid = (low + high)/2;
 
-    printf("%d\n", combination(M, N));
+    if(check(mid)){
+      ans = mid;
+      high = mid-1;
+    }
+    else
+      low = mid+1;
   }
 
+  printf("%d", ans);
+
   return 0;
+}
+
+bool check(int L){
+  if(sum[L-1] >= S) return true;
+
+  for(int i=L; i<N; i++)
+    if(sum[i] - sum[i-L] >= S) return true;
+  
+  return false;
 }
