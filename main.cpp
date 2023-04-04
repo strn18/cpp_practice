@@ -1,47 +1,44 @@
 #include <iostream>
-#define MAX 100000
+#define MAX 500000
 
 using namespace std;
 
-int N, S;
-int num[MAX], sum[MAX] = {0};
-
-bool check(int L);
+int S[MAX+1] = {0}, J[MAX+1] = {0};
 
 int main(){
-  scanf("%d %d", &N, &S);
+  int N, H;
 
-  for(int i=0; i<N; i++)
-    scanf("%d", &num[i]);
-  
-  sum[0] = num[0];
-  for(int i=1; i<N; i++)
-    sum[i] = sum[i-1] + num[i];
+  scanf("%d %d", &N, &H);
 
-  int low = 1, high = N;
-  int ans = 0;
+  for(int i=1; i<=N; i++){
+    int obs_h;
 
-  while(low <= high){
-    int mid = (low + high)/2;
+    scanf("%d", &obs_h);
 
-    if(check(mid)){
-      ans = mid;
-      high = mid-1;
-    }
-    else
-      low = mid+1;
+    if(i%2) S[obs_h]++;
+    else J[H+1-obs_h]++;
   }
 
-  printf("%d", ans);
+  for(int h=H-1; h>=1; h--)
+    S[h] += S[h+1];
+
+  for(int h=2; h<=H; h++)
+    J[h] += J[h-1];
+
+  int min_obs = N+1, count = 0;
+
+  for(int h=1; h<=H; h++){
+    int obs = S[h]+J[h];
+
+    if(obs < min_obs){
+      min_obs = obs;
+      count = 1;
+    }
+    else if(obs == min_obs)
+      count++;
+  }
+
+  printf("%d %d", min_obs, count);
 
   return 0;
-}
-
-bool check(int L){
-  if(sum[L-1] >= S) return true;
-
-  for(int i=L; i<N; i++)
-    if(sum[i] - sum[i-L] >= S) return true;
-  
-  return false;
 }
