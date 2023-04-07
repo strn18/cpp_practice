@@ -36,3 +36,7 @@ int rect_average(int r1, int c1, int r2, int c2){
 
   return (sum[r2][c2]- sum[r2][c1-1] - sum[r1-1][c2] + sum[r1-1][c1-1])/dots;
 }
+
+/*
+2차원 구간 합 기본 문제. 첨에는 그냥 제출했다가, 나중에 ios_base 어쩌고 저거 붙이고 cin cout으로 바꾸고 제출했더니 시간 줄었다.
+*/
