@@ -1,5 +1,7 @@
 #include <iostream>
-#define MAX 300
+#include <algorithm>
+#include <cstdlib>
+#define MAX 100000
 
 using namespace std;
 
@@ -7,24 +9,32 @@ int main(){
   ios_base::sync_with_stdio(false);
   cin.tie(NULL);
 
-  int N, M, K;
-  int p_sum[MAX+1][MAX+1] = {0};
+  int N, val[MAX];
+  int ans, left, right;
 
-  cin >> N >> M;
-  for(int i=1; i<=N; i++){
-    for(int j=1; j<=M; j++){
-      cin >> p_sum[i][j];
-      p_sum[i][j] += p_sum[i][j-1]+p_sum[i-1][j]-p_sum[i-1][j-1];
+  cin >> N;
+  for(int i=0; i<N; i++)
+    cin >> val[i];
+
+  sort(val, val+N);
+
+  int l = 0, r = N-1;
+  ans = abs(val[l]+val[r]);
+  left = l; right = r;
+
+  while(l != r-1){
+    if(abs(val[l+1]+val[r]) < abs(val[l]+val[r-1]))
+      l++;
+    else
+      r--;
+
+    if(abs(val[l]+val[r]) < ans){
+      ans = abs(val[l]+val[r]);
+      left = l; right = r;
     }
   }
 
-  cin >> K;
-  while(K--){
-    int i, j, x, y;
-
-    cin >> i >> j >> x >> y;
-    cout << p_sum[x][y]-p_sum[x][j-1]-p_sum[i-1][y]+p_sum[i-1][j-1] << '\n';
-  }
+  cout << val[left] << ' ' << val[right];
 
   return 0;
 }
