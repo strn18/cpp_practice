@@ -56,3 +56,8 @@ void now_merge(int p, int q, int r){
   for(int i=p; i<=r; i++)
     rope[i] = temp[i];
 }
+
+/*
+rope를 오름차순 정렬한다. rope[0]*N, rope[1]*N-1, rope[2]*N-2, ..., rope[N-1]*1 중에서 가장 큰 값을 찾는다.
+정렬은 병합정렬로 직접 구현해보았다.
+*/
