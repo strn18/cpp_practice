@@ -1,58 +1,42 @@
 #include <iostream>
-#define MAX 100000
+#include <algorithm>
+#define MAX 2000
 
 using namespace std;
-
-int rope[MAX], temp[MAX];
-
-void merge_sort(int p, int r);
-void now_merge(int p, int q, int r);
 
 int main(){
   ios_base::sync_with_stdio(false);
   cin.tie(NULL);
 
-  int N, ans = 0;
+  int N, count = 0;
+  int num[MAX];
 
   cin >> N;
   for(int i=0; i<N; i++)
-    cin >> rope[i];
-  
-  merge_sort(0, N-1);
+    cin >> num[i];
 
-  for(int i=0; i<N; i++)
-    ans = max(ans, rope[i]*(N-i));
+  sort(num, num+N);
 
-  cout << ans;
+  for(int i=0; i<N; i++){
+    int s = (i==0 ? 1 : 0), e = (i==N-1 ? N-2 : N-1);
+
+    while(s < e){
+      int sum = num[s] + num[e];
+
+      if(sum == num[i]){
+        count++;
+        break;
+      }
+      else if(sum < num[i]){
+        if(++s == i) s++;
+      }
+      else{
+        if(--e == i) e--;
+      }
+    }
+  }
+
+  cout << count;
 
   return 0;
-}
-
-void merge_sort(int p, int r){
-  if(p < r){
-    int q = (p+r)/2;
-
-    merge_sort(p, q);
-    merge_sort(q+1, r);
-
-    now_merge(p, q, r);
-  }
-}
-
-void now_merge(int p, int q, int r){
-  int i = p, j = q+1, idx = p;
-
-  while(i<=q && j<=r){
-    temp[idx++] = (rope[i] < rope[j] ? rope[i++] : rope[j++]);
-  }
-
-  while(i<=q){
-    temp[idx++] = rope[i++];
-  }
-  while(j<=r){
-    temp[idx++] = rope[j++];
-  }
-
-  for(int i=p; i<=r; i++)
-    rope[i] = temp[i];
 }
