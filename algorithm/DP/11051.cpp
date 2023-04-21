@@ -29,3 +29,8 @@ int combination(int n, int r){
 
   return dp[n][r] = (combination(n-1, r)+combination(n-1, r-1))%MOD;
 }
+
+/*
+쉬운 콤비네이션(조합) 구하기 dp 문제. 근데 마지막에 쫌 헤맸는데, nCr 에서 r이 0이면 값은 1이 되어야 하는데(n개 중에 0개를 고르는 가짓수는 
+아무 것도 안 고르기 라는 딱 한 가지니까), 0이라고 생각해서 틀렸다.
+*/
