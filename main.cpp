@@ -1,31 +1,26 @@
 #include <iostream>
+#define MAX 90
 
 using namespace std;
 
 int main(){
   ios_base::sync_with_stdio(false);
   cin.tie(NULL);
-
-  int N, count = 0;
-  int nums[10] = {0};
+  
+  int N;
+  long long dp[MAX+1][2] = {0};
 
   cin >> N;
 
-  while(N>0){
-    nums[N%10]++;
-    N/=10;
+  dp[1][0] = 1;
+  dp[1][1] = 1;
+
+  for(int i=2; i<=N; i++){
+    dp[i][0] = dp[i-1][0] + dp[i-1][1];
+    dp[i][1] = dp[i-1][0];
   }
 
-  for(int i=0; i<10; i++){
-    if(i==6 || i==9) continue;
-    count = max(count, nums[i]);
-  }
-
-  if(nums[6] == nums[9]) count = max(count, nums[6]);
-  else if(nums[6] > nums[9]) count = max(count, nums[9] + (nums[6]-nums[9]+1)/2);
-  else count = max(count, nums[6] + (nums[9]-nums[6]+1)/2);
-
-  cout << count;
+  cout << dp[N][1];
 
   return 0;
 }
