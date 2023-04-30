@@ -62,3 +62,7 @@ void dfs(bool visited[MAX][MAX], int r, int c, int h){
         dfs(visited, nr, nc, h);
   }
 }
+
+/*
+2468을 dfs로도 한 번 풀어봄. 재귀 쓰니까 좀 간결해지긴 함.
+*/
