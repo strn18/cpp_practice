@@ -1,64 +1,58 @@
 #include <iostream>
-#define MAX 100
+#define MAX 200
+#define INF 2100000000
 
 using namespace std;
-
-int N, board[MAX][MAX];
-int dr[4] = {-1, 1, 0, 0};
-int dc[4] = {0, 0, -1, 1};
-
-int solve(int h);
-void dfs(bool visited[MAX][MAX], int r, int c, int h);
 
 int main(){
   ios_base::sync_with_stdio(false);
   cin.tie(NULL);
 
-  int high = 0, low = 101, ans = 0;
+  int n, m;
+  int dist[MAX+1][MAX+1];
+  int ans[MAX+1][MAX+1];
 
-  cin >> N;
+  cin >> n >> m;
 
-  for(int i=0; i<N; i++){
-    for(int j=0; j<N; j++){
-      cin >> board[i][j];
-      high = max(high, board[i][j]);
-      low = min(low, board[i][j]);
-    }
+  for(int i=1; i<=n; i++)
+    for(int j=1; j<=n; j++)
+      dist[i][j] = INF;
+
+  for(int i=0; i<m; i++){
+    int a, b, c;
+
+    cin >> a >> b >> c;
+
+    dist[a][b] = c;
+    dist[b][a] = c;
+
+    ans[a][b] = b;
+    ans[b][a] = a;
   }
 
-  for(int h=low-1; h<=high; h++)
-    ans = max(ans, solve(h));
-  
-  cout << ans;
+  for(int k=1; k<=n; k++){
+    for(int i=1; i<=n; i++){
+      if(dist[i][k] == INF) continue;
 
-  return 0;
-}
+      for(int j=1; j<=n; j++){
+        if(dist[k][j] == INF) continue;
 
-int solve(int h){
-  bool visited[MAX][MAX] = {false};
-  int count = 0;
-
-  for(int i=0; i<N; i++){
-    for(int j=0; j<N; j++){
-      if(board[i][j]>h && !visited[i][j]){
-        count++;
-        dfs(visited, i, j, h);
+        if(dist[i][k]+dist[k][j] < dist[i][j]){
+          dist[i][j] = dist[i][k]+dist[k][j];
+          ans[i][j] = ans[i][k];
+        }
       }
     }
   }
 
-  return count;
-}
-
-void dfs(bool visited[MAX][MAX], int r, int c, int h){
-  visited[r][c] = true;
-
-  for(int i=0; i<4; i++){
-    int nr = r+dr[i];
-    int nc = c+dc[i];
-
-    if(0<=nr && nr<N && 0<=nc && nc<N)
-      if(board[nr][nc]>h && !visited[nr][nc])
-        dfs(visited, nr, nc, h);
+  for(int i=1; i<=n; i++){
+    for(int j=1; j<=n; j++){
+      if(i==j) cout << '-';
+      else cout << ans[i][j];
+      cout << ' ';
+    }
+    cout << '\n';
   }
+
+  return 0;
 }
