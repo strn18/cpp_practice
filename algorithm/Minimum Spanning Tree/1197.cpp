@@ -63,3 +63,9 @@ bool union_root(int x, int y){
   parent[rx] = ry;
   return true;
 }
+
+/*
+1922랑 거의 비슷한 MST 기본 문제. union_root를 bool 형으로 한 것 빼고는 똑같이 풀었다. x, y의 root가 같으면 false를 리턴하고, 다르면 union
+한 다음 true를 리턴한다. 이렇게 하면 35행 for문에서 간선을 고를 때, a와 b의 root가 같은지 확인한 후 union을 해줄 필요 없이 그냥 union_root만
+해주면 되니까 좀 짧아짐.
+*/
