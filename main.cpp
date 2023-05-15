@@ -1,10 +1,9 @@
 #include <iostream>
-#include <algorithm>
-#define MAX 10000
+#define MAX 100000
 
 using namespace std;
 
-int arr[MAX+1] = {0};
+int dp[MAX+1] = {0};
 
 int main(){
   ios_base::sync_with_stdio(false);
@@ -14,17 +13,16 @@ int main(){
 
   cin >> N;
 
-  for(int i=0; i<N; i++){
-    int num;
+  for(int i=1; i<=N; i++){
+    int minimum = i;
 
-    cin >> num;
+    for(int j=1; j*j<=i; j++)
+      minimum = min(minimum, 1+dp[i-(j*j)]);
 
-    arr[num]++;
+    dp[i] = minimum;
   }
 
-  for(int i=1; i<=MAX; i++)
-    for(int j=0; j<arr[i]; j++)
-      cout << i << '\n';
+  cout << dp[N];
 
   return 0;
 }
