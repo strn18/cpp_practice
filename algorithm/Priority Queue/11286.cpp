@@ -68,4 +68,6 @@ struct compare{
 가령 sort에서는 52행 부분에 return a < b; 이렇게 하면 오름차순으로 정렬되는데,
 pq에서는 57행 부분에 return a < b; 이렇게 하면 내림차순으로 정렬된다. 사실 엄밀히 말하면 내림차순은 아니고, 최댓값이 맨 위(pq의 top)에 온다.
 greater나 less를 쓸 때도 마찬가지임.
+
+https://my-codinglog.tistory.com/21 operator의 동작 관련 궁금한 건 여기 참고
 */
