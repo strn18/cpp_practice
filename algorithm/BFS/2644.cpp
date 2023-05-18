@@ -57,3 +57,7 @@ void bfs(int start){
     }
   }
 }
+
+/*
+기초 bfs 문제.
+*/
