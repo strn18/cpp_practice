@@ -49,3 +49,7 @@ void dfs(int r, int c){
     }
   }
 }
+
+/*
+기초 dfs/bfs 문제.
+*/
