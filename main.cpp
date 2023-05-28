@@ -1,52 +1,39 @@
 #include <iostream>
+#include <cmath>
 
 using namespace std;
-
-void swap(int *a, int *b);
 
 int main(){
   ios_base::sync_with_stdio(false);
   cin.tie(NULL);
 
-  int T;
+  int n, m;
 
-  cin >> T;
+  cin >> n >> m;
 
-  while(T--){
-    int M, N, x, y, high;
-    int count = 0;
+  int count2 = 0, count5 = 0;
 
-    cin >> M >> N >> x >> y;
-
-    if(M > N){
-      swap(&M, &N);
-      swap(&x, &y);
-    }
-
-    high = x;
-
-    count += x;
-    
-    while(high != y){
-      high -= (N-M);
-      count += M;
-      
-      if(high <= 0) high += N;
-
-      if(high == x){
-        count = -1;
-        break;
-      }
-    }
-
-    cout << count << '\n';
+  for(int i=1; pow(2, i)<=n; i++){
+    int cur = pow(2, i);
+    count2 += (n/cur) - ((n-m)/cur);
   }
 
-  return 0;
-}
+  for(int i=1; pow(5, i)<=n; i++){
+    int cur = pow(5, i);
+    count5 += (n/cur) - ((n-m)/cur);
+  }
 
-void swap(int *a, int *b){
-  int temp = *a;
-  *a = *b;
-  *b = temp;
+  for(int i=1; pow(2, i)<=m; i++){
+    int cur = pow(2, i);
+    count2 -= (m/cur);
+  }
+
+  for(int i=1; pow(5, i)<=m; i++){
+    int cur = pow(5, i);
+    count5 -= (m/cur);
+  }
+
+  cout << min(count2, count5);
+
+  return 0;
 }
