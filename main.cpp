@@ -1,5 +1,5 @@
 #include <iostream>
-#include <cmath>
+#include <map>
 
 using namespace std;
 
@@ -7,33 +7,30 @@ int main(){
   ios_base::sync_with_stdio(false);
   cin.tie(NULL);
 
-  int n, m;
+  int N, X;
+  map<int, int> m; // {key값, depth}
+  long long C = 0;
 
-  cin >> n >> m;
+  cin >> N;
 
-  int count2 = 0, count5 = 0;
+  m.insert({0, 0});
+  m.insert({N+1, 0});
 
-  for(int i=1; pow(2, i)<=n; i++){
-    int cur = pow(2, i);
-    count2 += (n/cur) - ((n-m)/cur);
+  for(int i=0; i<N; i++){
+    int depth;
+
+    cin >> X;
+
+    map<int, int>:: iterator higher_min = m.lower_bound(X);
+    map<int, int>:: iterator lower_max = (--higher_min)++;
+
+    depth = max(higher_min->second, lower_max->second)+1;
+
+    m.insert({X, depth});
+    C += depth-1;
+
+    cout << C << '\n';
   }
-
-  for(int i=1; pow(5, i)<=n; i++){
-    int cur = pow(5, i);
-    count5 += (n/cur) - ((n-m)/cur);
-  }
-
-  for(int i=1; pow(2, i)<=m; i++){
-    int cur = pow(2, i);
-    count2 -= (m/cur);
-  }
-
-  for(int i=1; pow(5, i)<=m; i++){
-    int cur = pow(5, i);
-    count5 -= (m/cur);
-  }
-
-  cout << min(count2, count5);
 
   return 0;
 }
