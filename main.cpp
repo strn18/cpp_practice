@@ -1,5 +1,4 @@
 #include <iostream>
-#include <string>
 
 using namespace std;
 
@@ -7,28 +6,18 @@ int main(){
   ios_base::sync_with_stdio(false);
   cin.tie(NULL);
 
-  int cur_sticks = 0, total = 0;
-  char prev;
-  string str;
+  int E, S, M, ans = 1;
 
-  cin >> str;
+  cin >> E >> S >> M;
 
-  prev = str[0];
+  E %= 15; S %= 28; M %= 19;
 
-  for(int i=1; i<str.size(); i++){
-    if(prev == '(' && str[i] == '('){
-      cur_sticks++;
-      total++;
-    }
-    else if(prev == '(' && str[i] == ')')
-      total += cur_sticks;
-    else if(prev == ')' && str[i] == ')')
-      cur_sticks--;
-
-    prev = str[i];
+  while(true){
+    if((ans % 15 == E) && (ans % 28 == S) && (ans % 19 == M)) break;
+    ans++;
   }
 
-  cout << total;
+  cout << ans;
 
   return 0;
 }
