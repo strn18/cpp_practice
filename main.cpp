@@ -1,120 +1,69 @@
 #include <iostream>
-#include <vector>
-#include <algorithm>
-#define MAX 10
+#include <queue>
+#include <cmath>
+#define MAX 1000
 
 using namespace std;
 
-int N, M;
-int board[MAX][MAX]; // -2: 바다, -1: 섬(그룹화 전), else: 섬(그룹화 후)
+typedef struct{int x, y;} pos;
 
-int parent[6];
+bool visited[MAX+1] = {false};
+bool connected[MAX+1][MAX+1] = {false};
 
-int dr[4] = {-1, 1, 0, 0};
-int dc[4] = {0, 0, -1, 1};
-
-void dfs(int r, int c, int num);
-int find_root(int x);
-bool union_root(int x, int y);
-bool range_out(int r, int c);
+double dist(pos a, pos b);
 
 int main(){
   ios_base::sync_with_stdio(false);
   cin.tie(NULL);
 
-  int island = 0, ans = 0;
-  vector<pair<int, pair<int, int>>> edge;
+  int N, M, count = 0;
+  double ans = 0;
+  priority_queue<pair<double, int>, vector<pair<double, int>>, greater<pair<double, int>>> pq;
+  pos coord[MAX+1];
 
   cin >> N >> M;
-
-  for(int i=0; i<N; i++){
-    for(int j=0; j<M; j++){
-      cin >> board[i][j];
-      board[i][j] -= 2;
-    }
-  }
   
-  for(int i=0; i<N; i++)
-    for(int j=0; j<M; j++)
-      if(board[i][j] == -1)
-        dfs(i, j, island++);
+  for(int i=1; i<=N; i++)
+    cin >> coord[i].x >> coord[i].y;
   
-  for(int i=0; i<island; i++)
-    parent[i] = i;
+  for(int i=0; i<M; i++){
+    int a, b;
 
-  for(int r=0; r<N; r++){
-    for(int c=0; c<M; c++){
-      if(board[r][c] == -2) continue;
+    cin >> a >> b;
 
-      for(int i=0; i<4; i++){
-        for(int j=1; true; j++){
-          int nr = r + (dr[i]*j);
-          int nc = c + (dc[i]*j);
+    connected[a][b] = true;
+    connected[b][a] = true;
+  }
 
-          if(range_out(nr, nc)) break;
+  pq.push({0, 1});
 
-          if(board[nr][nc] == -2) continue;
-          if(board[nr][nc] == board[r][c]) break;
+  while(count < N){
+    double d = pq.top().first;
+    int cur = pq.top().second;
 
-          if(j > 2) edge.push_back({j-1, {board[r][c], board[nr][nc]}});
+    pq.pop();
 
-          break;
-        }
-      }
+    if(visited[cur]) continue;
+
+    visited[cur] = true;
+    ans += d;
+    count++;
+
+    for(int i=1; i<=N; i++){
+      if(visited[i]) continue;
+
+      if(connected[cur][i]) pq.push({0, i});
+      else pq.push({dist(coord[cur], coord[i]), i});
     }
   }
 
-  sort(edge.begin(), edge.end());
-
-  for(int i=0; i<edge.size(); i++){
-    int d = edge[i].first;
-    int a = edge[i].second.first;
-    int b = edge[i].second.second;
-
-    if(union_root(a, b)){
-      ans += d;
-      union_root(a, b);
-      
-      if(--island == 1) break;
-    }
-  }
-
-  cout << (island == 1 ? ans : -1);
+  cout << fixed;
+  cout.precision(2);
+  cout << ans;
 
   return 0;
 }
 
-void dfs(int r, int c, int num){
-  board[r][c] = num;
-
-  for(int i=0; i<4; i++){
-    int nr = r+dr[i];
-    int nc = c+dc[i];
-
-    if(range_out(nr, nc) || board[nr][nc] != -1) continue;
-
-    dfs(nr, nc, num);
-  }
-}
-
-int find_root(int x){
-  if(parent[x] == x) return x;
-
-  return parent[x] = find_root(parent[x]);
-}
-
-bool union_root(int x, int y){
-  int rx = find_root(x);
-  int ry = find_root(y);
-
-  if(rx == ry) return false;
-
-  parent[rx] = ry;
-
-  return true;
-}
-
-bool range_out(int r, int c){
-  if(r<0 || N<=r || c<0 || M<=c) return true;
-  return false;
+double dist(pos a, pos b){
+  return sqrt(pow((a.x-b.x), 2) + pow((a.y-b.y), 2));
 }
