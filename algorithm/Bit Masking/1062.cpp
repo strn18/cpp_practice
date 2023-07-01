@@ -77,3 +77,10 @@ void count_words(void){
 
   ans = max(ans, count);
 }
+
+/*
+순열(백트래킹) + 브루트포스 + 비트마스킹 문제.
+
+예전에 파이썬으로 풀었던 건데 C++로도 풀어봤다. 처음에 풀 때는 비트마스킹 없이 걍 풀었었는데, 풀고 난 다음
+https://nanyoungkim.tistory.com/173 여기 글 보면서 비트마스킹으로 다시 풀어봤다.
+*/
