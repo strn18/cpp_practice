@@ -1,54 +1,64 @@
 #include <iostream>
-#define MAX 11
-#define INF 2100000000
+#include <vector>
+#define MAX 100000
 
 using namespace std;
 
-int N, max_val = -INF, min_val = INF;
-int num[MAX], oper[4];
+bool visited[MAX+1] = {false};
+int dist[MAX+1];
+vector<pair<int, int>> adj[MAX+1];
 
-void choose(int val, int depth);
+void dfs(int start, int count);
 
 int main(){
   ios_base::sync_with_stdio(false);
   cin.tie(NULL);
 
-  cin >> N;
+  int V, max_dist = 0, max_num = 0, ans = 0;
 
-  for(int i=0; i<N; i++)
-    cin >> num[i];
-  
-  for(int i=0; i<4; i++)
-    cin >> oper[i];
-  
-  choose(num[0], 0);
+  cin >> V;
 
-  cout << max_val << '\n' << min_val;
+  for(int i=0; i<V; i++){
+    int a, b, c;
+
+    cin >> a;
+
+    while(true){
+      cin >> b;
+      if(b == -1) break;
+      cin >> c;
+      adj[a].push_back({b, c});
+    }
+  }
+
+  dfs(1, 0);
+
+  for(int i=1; i<=V; i++){
+    if(dist[i] > max_dist){
+      max_dist = dist[i];
+      max_num = i;
+    }
+
+    visited[i] = false;
+  }
+
+  dfs(max_num, 0);
+
+  for(int i=1; i<=V; i++)
+    ans = max(ans, dist[i]);
+
+  cout << ans;
 
   return 0;
 }
 
-void choose(int val, int depth){
-  int next;
+void dfs(int start, int count){
+  visited[start] = true;
+  dist[start] = count;
 
-  if(depth == N-1){
-    max_val = max(max_val, val);
-    min_val = min(min_val, val);
-    return;
-  }
-
-  for(int i=0; i<4; i++){
-    if(oper[i] == 0) continue;
-
-    oper[i]--;
+  for(int i=0; i<adj[start].size(); i++){
+    int next = adj[start][i].first;
     
-    if(i==0) next = val + num[depth+1];
-    else if(i==1) next = val - num[depth+1];
-    else if(i==2) next = val * num[depth+1];
-    else next = val / num[depth+1];
-
-    choose(next, depth+1);
-
-    oper[i]++;
+    if(!visited[next]) dfs(next, count+adj[start][i].second);
   }
 }
