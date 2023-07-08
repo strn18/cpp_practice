@@ -1,64 +1,64 @@
 #include <iostream>
 #include <vector>
-#define MAX 100000
+#define MAX 50
 
 using namespace std;
 
-bool visited[MAX+1] = {false};
-int dist[MAX+1];
-vector<pair<int, int>> adj[MAX+1];
+int parent[MAX+1];
 
-void dfs(int start, int count);
+void union_root(int x, int y);
+int find_root(int x); // root가 0이면 진실을 아는 사람임
 
 int main(){
   ios_base::sync_with_stdio(false);
   cin.tie(NULL);
 
-  int V, max_dist = 0, max_num = 0, ans = 0;
+  int N, M, T, count = 0;
+  vector<int> party[MAX];
 
-  cin >> V;
+  cin >> N >> M >> T;
 
-  for(int i=0; i<V; i++){
-    int a, b, c;
-
-    cin >> a;
-
-    while(true){
-      cin >> b;
-      if(b == -1) break;
-      cin >> c;
-      adj[a].push_back({b, c});
-    }
+  for(int i=1; i<=N; i++)
+    parent[i] = i;
+  
+  for(int i=0; i<T; i++){
+    int num;
+    cin >> num;
+    parent[num] = 0;
   }
 
-  dfs(1, 0);
+  for(int i=0; i<M; i++){
+    int n;
+    cin >> n;
 
-  for(int i=1; i<=V; i++){
-    if(dist[i] > max_dist){
-      max_dist = dist[i];
-      max_num = i;
+    for(int j=0; j<n; j++){
+      int num;
+      cin >> num;
+      party[i].push_back(num);
     }
 
-    visited[i] = false;
+    for(int j=1; j<party[i].size(); j++)
+      union_root(party[i][j-1], party[i][j]);
   }
 
-  dfs(max_num, 0);
+  for(int i=0; i<M; i++)
+    if(find_root(party[i][0]) != 0) count++;
 
-  for(int i=1; i<=V; i++)
-    ans = max(ans, dist[i]);
-
-  cout << ans;
+  cout << count;
 
   return 0;
 }
 
-void dfs(int start, int count){
-  visited[start] = true;
-  dist[start] = count;
+void union_root(int x, int y){
+  int rx = find_root(x);
+  int ry = find_root(y);
 
-  for(int i=0; i<adj[start].size(); i++){
-    int next = adj[start][i].first;
-    
-    if(!visited[next]) dfs(next, count+adj[start][i].second);
-  }
+  if(rx < ry) parent[ry] = rx;
+  else parent[rx] = ry;
+}
+
+int find_root(int x){
+  if(parent[x] == x) return x;
+
+  return parent[x] = find_root(parent[x]);
 }
