@@ -38,3 +38,7 @@ void dfs(int cur, int count){
     dfs(i, count+1);
   }
 }
+
+/*
+기초 dfs + 백트래킹 문제. 근데 분류가 백트래킹으로 되어 있어서 그걸로 분류함.
+*/
