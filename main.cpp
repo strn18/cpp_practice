@@ -1,40 +1,25 @@
 #include <iostream>
+#include <string>
 #include <algorithm>
-#define MAX 8
 
 using namespace std;
-
-int N, M;
-int num[MAX], ans[MAX];
-
-void dfs(int cur, int count);
 
 int main(){
   ios_base::sync_with_stdio(false);
   cin.tie(NULL);
 
-  cin >> N >> M;
+  string num;
+  int sum = 0;
 
-  for(int i=0; i<N; i++)
-    cin >> num[i];
+  cin >> num;
 
-  sort(num, num+N);
+  sort(num.begin(), num.end(), greater<>());
 
-  dfs(0, 0);
+  for(int i=0; i<num.size(); i++)
+    sum += num[i]-'0';
 
+  if(num.back() != '0' || sum%3 != 0) cout << -1;
+  else cout << num;
+  
   return 0;
-}
-
-void dfs(int cur, int count){
-  if(count == M){
-    for(int i=0; i<M; i++)
-      cout << ans[i] << ' ';
-    cout << '\n';
-    return;
-  }
-
-  for(int i=cur; i<N; i++){
-    ans[count] = num[i];
-    dfs(i, count+1);
-  }
 }
