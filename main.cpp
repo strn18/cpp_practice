@@ -20,6 +20,8 @@ int main(){
 
   if(num.back() != '0' || sum%3 != 0) cout << -1;
   else cout << num;
+
+  // test
   
   return 0;
 }
