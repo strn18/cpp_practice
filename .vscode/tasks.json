@@ -12,6 +12,7 @@
             "command": "g++",
             "args": [
                 "${file}",
+                "-g",
                 "-o",
                 "${fileDirname}/${fileBasenameNoExtension}"
             ],
@@ -36,6 +37,7 @@
             "command": "gcc",
             "args": [
                 "${file}",
+                "-g",
                 "-o",
                 "${fileDirname}/${fileBasenameNoExtension}"
             ],
@@ -63,7 +65,7 @@
                 "/C",
                 "${fileDirname}\\${fileBasenameNoExtension}"
             ]
-        }/*,
+        },
         {
             "type": "cppbuild",
             "label": "C/C++: g++.exe 활성 파일 빌드",
@@ -85,7 +87,7 @@
                 "kind": "build",
                 "isDefault": true
             },
-            "detail": "컴파일러: C:/mingw64/bin/g++.exe"
-        }*/
+            "detail": "디버거에서 생성된 작업입니다."
+        }
     ]
 }
