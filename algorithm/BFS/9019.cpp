@@ -87,40 +87,14 @@ int R(int n){
   return n/10;
 }
 
-// #define MAX 100
+/*
+어렵지 않은 bfs 문제. https://www.acmicpc.net/problem/1697 이런 거랑 비슷한 류의 문제임.
 
-// bool adj[MAX][MAX];
-// bool visited[MAX];
+존재할 수 있는 수의 종류가 10000가지(0~9999) 밖에 안 되기 때문에, 계속 4가지 연산을 적용하면서 bfs를 치다보면 제한 시간 내에 답을 얻을 수 있다.
 
-// void dfs_init(int N, int path[100][2])
-// {
-//   for(int i=1; i<MAX; i++){
-//     for(int j=1; j<MAX; j++)
-//       adj[i][j] = false;
-//     visited[i] = false;
-//   }
+우선 A를 큐에 넣는다. 이때, 원소 형태는 {수, 그 수를 얻기까지의 명령어들} 형태이다. 그 다음, while문에서 다음의 연산을 반복한다.
+1) 큐의 front 꺼내기. 걔의 값이 B라면, second(명령어들) 출력하고 break.
+2) B가 아니라면, 그 수로 만들 수 있는 4가지 결과값에 대해서, 각 결과값이 not visited라면 큐에 넣어줌(이때, 방금 사용한 명령어를 더하여).
 
-//   for(int i=0; i<N-1; i++)
-//     adj[path[i][0]][path[i][1]] = true;
-// }
-
-// int dfs(int n)
-// {
-//   int st[MAX];
-//   int top = -1;
-
-//   st[++top] = n;
-
-//   while(top != -1){
-//     int cur = st[top--];
-//     visited[cur] = true;
-
-//     if(cur > n) return cur;
-
-//     for(int i=1; i<MAX; i++)
-//       if(adj[cur][i] && !visited[i])
-//         st[++top] = i;
-//   }
-
-//   return -1;
-// }
+다 풀고 다른 풀이도 찾아봤는데, https://donggoolosori.github.io/2020/10/05/boj-9019/ 내 풀이랑 거의 비슷했다.
+*/
