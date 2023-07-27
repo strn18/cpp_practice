@@ -1,3 +1,4 @@
+// 0/1 Knapsack(6. DP)
 #include <iostream>
 #define MAX_N 100
 #define MAX_K 1000
@@ -28,3 +29,7 @@ int main(){
 
   return 0;
 }
+
+/*
+이거도 그냥 기초 0/1 냅색 문제.
+*/
