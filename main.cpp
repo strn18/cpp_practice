@@ -1,5 +1,4 @@
 #include <iostream>
-#include <queue>
 
 using namespace std;
 
@@ -12,31 +11,8 @@ int main(){
   cin >> TC;
 
   for(int t=1; t<=TC; t++){
-    int N;
-    priority_queue<int> pq;
 
-    cin >> N;
-    
-    cout << '#' << t << ' ';
-
-    while(N--){
-      int num;
-
-      cin >> num;
-
-      if(num == 1){
-        int x;
-        cin >> x;
-        pq.push(x);
-      }
-      else{
-        cout << (pq.empty() ? -1 : pq.top()) << ' ';
-        
-        if(!pq.empty()) pq.pop();
-      }
-    }
-
-    cout << '\n';
+    cout << '#' << t << ' ' << 777 << '\n';
   }
 
   return 0;
