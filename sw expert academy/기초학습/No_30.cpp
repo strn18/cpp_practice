@@ -1,3 +1,4 @@
+// [Professional] 단어가 등장하는 횟수(9. 해시)
 #include <iostream>
 #include <string>
 #define MAX 100000
