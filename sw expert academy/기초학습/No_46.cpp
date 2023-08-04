@@ -1,3 +1,4 @@
+// Segment Tree 연습 - 2(14. 세그먼트 트리)
 #include <iostream>
 #define MAX 131072
 
@@ -87,3 +88,16 @@ long long find(int L, int R, int node_num, int node_L, int node_R){
 
   return find(L, R, node_num*2, node_L, mid) + find(L, R, node_num*2 + 1, mid, node_R);
 }
+
+/*
+No_45보다 더 기초적인 세그먼트 트리 문제. 대충 보면 좀 까다로워보이지만, 사실 쉽다. 
+
+쿼리 0은 그냥 update 하는 기본 쿼리니깐 넘어가고,
+쿼리 1은? 1 L R이 주어졌다면, num[L] - num[L+1] + num[L+2] ... num[R-1] 이렇게 더하고 빼고 더하고 빼고 해주면 된다. 이걸 어떻게 구할까?
+
+그냥 애초에 28행에서 배열을 입력받을 때, 인덱스가 짝수라면 그대로 수를 입력받아 num에 넣고, 홀수라면 -1을 곱해서 num에 넣어주면 된다. 
+그런 다음, 세그먼트 트리는 일반적인 구간 합 세그먼트 트리 형태로 구성한다. 그렇게 한다면, 세그먼트 트리에서 [A, B)의 범위를 갖는 노드의 
+A가 짝수라면 num[A] - num[A+1] + num[A+2] ... num[B-1] 이거고, A가 홀수라면 -num[A] + num[A+1] - num[A+2] ... num[B-1] 이거다.
+이를 이용하여, 쿼리 1 L R이 주어졌을 때, L이 짝수라면 그냥 [L, R) 범위의 세그먼트 트리를 find로 찾아 출력하면 되고, L이 홀수라면 그 값에 
+-1을 곱해서 출력하면 된다.
+*/
