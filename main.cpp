@@ -1,19 +1,19 @@
-#include <iostream>
+// #include <iostream>
 
-using namespace std;
+// using namespace std;
 
-int main(){
-  ios_base::sync_with_stdio(false);
-  cin.tie(NULL);
+// int main(){
+//   ios_base::sync_with_stdio(false);
+//   cin.tie(NULL);
 
-  int TC;
+//   int TC;
 
-  cin >> TC;
+//   cin >> TC;
 
-  for(int t=1; t<=TC; t++){
+//   for(int t=1; t<=TC; t++){
 
-    cout << '#' << t << ' ' << 777 << '\n';
-  }
+//     cout << '#' << t << ' ' << 777 << '\n';
+//   }
 
-  return 0;
-}
+//   return 0;
+// }
