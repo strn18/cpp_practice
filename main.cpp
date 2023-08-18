@@ -1,13 +1,50 @@
-// #include <iostream>
+#include <iostream>
+#define MAX 100
 
-// using namespace std;
+using namespace std;
 
-// int main(){
-//   ios_base::sync_with_stdio(false);
-//   cin.tie(NULL);
+int board[MAX][MAX];
+long long dp[MAX][MAX];
 
-//   return 0;
-// }
+long long DP(int r, int c);
+
+int main(){
+  ios_base::sync_with_stdio(false);
+  cin.tie(NULL);
+
+  int N;
+
+  cin >> N;
+
+  for(int i=0; i<N; i++){
+    for(int j=0; j<N; j++){
+      cin >> board[i][j];
+      dp[i][j] = -1;
+    }
+  }
+
+  dp[0][0] = 1;
+
+  cout << DP(N-1, N-1);
+
+  return 0;
+}
+
+long long DP(int r, int c){
+  if(dp[r][c] != -1) return dp[r][c];
+
+  long long count = 0;
+
+  for(int i=0; i<r; i++)
+    if(board[i][c] == r-i) count += DP(i, c);
+  
+  for(int j=0; j<c; j++)
+    if(board[r][j] == c-j) count += DP(r, j);
+  
+  return dp[r][c] = count;
+}
+
+
 
 // #include <iostream>
 // #include <vector>
