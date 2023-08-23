@@ -86,6 +86,7 @@ int findLCA(int a, int b){
   int diff = depth[b] - depth[a];
 
   for(int j=0; diff != 0; j++){ // a와 b의 높이가 같아질 때까지 b를 높인다. 
+  // 가령, 높이 차이가 11 = 1 + 2 + 8 이라면? b를 위로 1칸, 2칸, 0칸, 8칸 높이게 되어 a와 b의 높이가 같아지는 것.
     if(diff % 2) b = parent[b][j];
     diff /= 2;
   }
@@ -101,3 +102,8 @@ int findLCA(int a, int b){
 
   return parent[a][0];
 }
+
+/*
+SWEA 기초학습 No_17 풀고 LCA 공부한 다음 백준에서 풀어본 문제. 
+전체적으로는 큰 차이 없고, 걍 공부할 때 본 https://blog.naver.com/kks227/220820773477 여기랑 SWEA No_17 설명 참고하면 된다.
+*/
