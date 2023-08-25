@@ -65,3 +65,7 @@ int countSize(int r, int c){
 
   return count;
 }
+
+/*
+그냥 기초 bfs/dfs 문제.
+*/
