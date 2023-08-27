@@ -59,3 +59,7 @@ int find(int L, int R, int nodeNum, int nodeL, int nodeR){
 
   return min(find(L, R, nodeNum*2, nodeL, mid), find(L, R, nodeNum*2 + 1, mid + 1, nodeR));
 }
+
+/*
+기초 세그먼트 트리 문제.
+*/
