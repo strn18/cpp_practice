@@ -1,3 +1,4 @@
+// 17696. [Pro] 블록쌓기게임
 #include <vector>
 #define MAX 1048576 // 100만 이상인 첫 2의 제곱수
 #define INF 2100000000

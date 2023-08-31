@@ -1,3 +1,4 @@
+// 15963. [Pro] 최대최소값 찾기
 #include <algorithm>
 #define MAX_BUCKET_SIZE 448
 #define INF 2100000000
