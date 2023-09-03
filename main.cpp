@@ -1,63 +1,58 @@
 #include <iostream>
-#include <queue>
-#include <stack>
-#define MAX 1000000
+#include <vector>
+#define MAX 100
 
 using namespace std;
 
-int prevVal[MAX + 1] = {0};
+bool board[MAX+1][MAX+1] = {false};
+int dr[4] = {0, -1, 0, 1};
+int dc[4] = {1, 0, -1, 0};
+
+pair<int, int> makeDragonCurve(int r, int c, int d, int g);
 
 int main(){
   ios_base::sync_with_stdio(false);
   cin.tie(NULL);
 
-  int N;
-  queue<pair<int, int>> Q; // 값, 횟수
+  int N, ans = 0;
 
   cin >> N;
-
-  Q.push({N, 0});
-
-  while(!Q.empty()){
-    int curVal = Q.front().first;
-    int curCalc = Q.front().second;
-
-    Q.pop();
-
-    if(curVal == 1){
-      cout << curCalc << '\n';
-      break;
-    }
-
-    if(curVal % 3 == 0 && !prevVal[curVal / 3]){
-      Q.push({curVal / 3, curCalc + 1});
-      prevVal[curVal / 3] = curVal;
-    }
-    if(curVal % 2 == 0 && !prevVal[curVal / 2]){
-      Q.push({curVal / 2, curCalc + 1});
-      prevVal[curVal / 2] = curVal;
-    }
-    if(!prevVal[curVal - 1]){
-      Q.push({curVal - 1, curCalc + 1});
-      prevVal[curVal - 1] = curVal;
-    }
-  }
-
-  stack<int> nums;
-  int cur = 1;
-
-  while(true){
-    nums.push(cur);
-
-    if(cur == N) break;
-
-    cur = prevVal[cur];
-  }
-
-  while(!nums.empty()){
-    cout << nums.top() << ' ';
-    nums.pop();
-  }
   
+  while(N--){
+    int x, y, d, g;
+
+    cin >> x >> y >> d >> g;
+
+    makeDragonCurve(y, x, d, g);
+  }
+
+  for(int i=0; i<MAX; i++)
+    for(int j=0; j<MAX; j++)
+      if(board[i][j] && board[i][j+1] && board[i+1][j] && board[i+1][j+1]) ++ans;
+
+  cout << ans;
+
   return 0;
+}
+
+pair<int, int> makeDragonCurve(int r, int c, int d, int g){
+  board[r][c] = true;
+
+  if(g == 0){
+    int nextR = r + dr[d];
+    int nextC = c + dc[d];
+
+    board[nextR][nextC] = true;
+
+    return {nextR, nextC};
+  }
+
+  pair<int, int> mid = makeDragonCurve(r, c, d, g-1);
+
+  int endR = mid.first + (c - mid.second);
+  int endC = mid.second + (mid.first - r);
+
+  makeDragonCurve(endR, endC, (d+3)%4, g-1);
+
+  return {endR, endC};
 }
