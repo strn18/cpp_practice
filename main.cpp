@@ -1,67 +1,68 @@
 #include <iostream>
 #include <queue>
-#include <stack>
-#define MAX 100000
+#include <string>
+#include <unordered_map>
 
 using namespace std;
-
-bool visited[MAX+1] = {false};
-int prevPos[MAX+1];
 
 int main(){
   ios_base::sync_with_stdio(false);
   cin.tie(NULL);
 
-  int N, K, ans;
-  queue<pair<int, int>> subin; // {위치, 시간}
+  int T;
 
-  cin >> N >> K;
+  cin >> T;
 
-  subin.push({N, 0});
-  visited[N] = true;
+  while(T--){
+    int k, pqSize = 0;
+    priority_queue<int> maxPQ;
+    priority_queue<int, vector<int>, greater<int>> minPQ;
+    unordered_map<int, int> numCount;
 
-  while(true){
-    pair<int, int> cur = subin.front();
+    cin >> k;
+    
+    while(k--){
+      string ch;
+      int n;
 
-    subin.pop();
+      cin >> ch >> n;
 
-    if(cur.first == K){
-      ans = cur.second;
-      break;
+      if(ch == "I"){
+        pqSize++;
+
+        maxPQ.push(n);
+        minPQ.push(n);
+        
+        if(numCount.count(n) == 0) numCount[n] = 1;
+        else numCount[n]++;
+      }
+      else{
+        if(pqSize == 0) continue;
+
+        pqSize--;
+        
+        if(n == 1){
+          while(numCount[maxPQ.top()] == 0) maxPQ.pop();
+
+          numCount[maxPQ.top()]--;
+          maxPQ.pop();
+        }
+        else{
+          while(numCount[minPQ.top()] == 0) minPQ.pop();
+
+          numCount[minPQ.top()]--;
+          minPQ.pop();
+        }
+      }
     }
 
-    if(0 <= cur.first - 1 && !visited[cur.first - 1]){
-      subin.push({cur.first - 1, cur.second + 1});
-      visited[cur.first - 1] = true;
-      prevPos[cur.first - 1] = cur.first;
+    if(pqSize == 0) cout << "EMPTY" << '\n';
+    else{
+      while(numCount[maxPQ.top()] == 0) maxPQ.pop();
+      while(numCount[minPQ.top()] == 0) minPQ.pop();
+
+      cout << maxPQ.top() << ' ' << minPQ.top() << '\n';
     }
-    if(cur.first + 1 <= MAX && !visited[cur.first + 1]){
-      subin.push({cur.first + 1, cur.second + 1});
-      visited[cur.first + 1] = true;
-      prevPos[cur.first + 1] = cur.first;
-    }
-    if(cur.first * 2 <= MAX && !visited[cur.first * 2]){
-      subin.push({cur.first * 2, cur.second + 1});
-      visited[cur.first * 2] = true;
-      prevPos[cur.first * 2] = cur.first;
-    }
-  }
-
-  int curPos = K;
-  stack<int> posHistory;
-
-  while(curPos != N){
-    posHistory.push(curPos);
-    curPos = prevPos[curPos];
-  }
-
-  posHistory.push(N);
-
-  cout << ans << '\n';
-
-  while(!posHistory.empty()){
-    cout << posHistory.top() << ' ';
-    posHistory.pop();
   }
 
   return 0;
