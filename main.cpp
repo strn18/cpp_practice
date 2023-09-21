@@ -1,54 +1,72 @@
 #include <iostream>
-#include <queue>
-#include <cstring>
-#define MAX 100000
+#include <string>
 
 using namespace std;
 
-bool visited[MAX+1];
+string S;
 
-bool outOfBound(int n);
+void print(int start, int end, bool rev);
+bool isAlphaNum(char ch);
 
 int main(){
   ios_base::sync_with_stdio(false);
   cin.tie(NULL);
 
-  int N, K, ansTime, ansCount = 0;
-  queue<pair<int, int>> Q;
+  bool isWord = false, isTag = false;
+  int start = 0;
 
-  cin >> N >> K;
+  getline(cin, S);
 
-  Q.push({N, 0});
-
-  while(!Q.empty()){
-    int curPos, curTime;
-
-    curPos = Q.front().first;
-    curTime = Q.front().second;
-
-    Q.pop();
-
-    if(curPos == K){
-      if(ansCount == 0){
-        ansTime = curTime;
-        ansCount = 1;
+  for(int i=0; i<S.size(); i++){
+    if(isTag){
+      if(S[i] == '>'){
+        print(start, i, false);
+        isTag = false;
       }
-      else if(ansTime == curTime) ansCount++;
     }
 
-    visited[curPos] = true;
+    else if(isWord){
+      if(!isAlphaNum(S[i])){
+        print(start, i-1, true);
+        isWord = false;
 
-    if(!outOfBound(curPos - 1) && !visited[curPos - 1]) Q.push({curPos - 1, curTime + 1});
-    if(!outOfBound(curPos + 1) && !visited[curPos + 1]) Q.push({curPos + 1, curTime + 1});
-    if(!outOfBound(curPos * 2) && !visited[curPos * 2]) Q.push({curPos * 2, curTime + 1});
+        if(S[i] == '<'){
+          start = i;
+          isTag = true;
+        }
+        else cout << ' ';
+      }
+    }
+
+    else{
+      if(isAlphaNum(S[i])){
+        isWord = true;
+        start = i;
+      }
+      else{
+        isTag = true;
+        start = i;
+      }
+    }
   }
 
-  cout << ansTime << '\n' << ansCount;
-
+  if(isWord) print(start, S.size()-1, true);
+  
   return 0;
 }
 
-bool outOfBound(int n){
-  if(n < 0 || MAX < n) return true;
-  else return false;
+void print(int start, int end, bool rev){
+  if(rev){
+    for(int i=end; i>=start; i--)
+      cout << S[i];
+  }
+  else{
+    for(int i=start; i<=end; i++)
+      cout << S[i];
+  }
+}
+
+bool isAlphaNum(char ch){
+  if(ch == ' ' || ch == '<' || ch == '>') return false;
+  else return true;
 }
