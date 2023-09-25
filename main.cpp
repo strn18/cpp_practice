@@ -1,34 +1,33 @@
 #include <iostream>
-#include <vector>
-#include <algorithm>
-#define MAX 1000
 
 using namespace std;
+
+int GCD(int a, int b);
 
 int main(){
   ios_base::sync_with_stdio(false);
   cin.tie(NULL);
 
-  int N;
-  int box[MAX];
-  vector<int> v;
+  int a1, b1, a2, b2;
 
-  cin >> N;
+  cin >> a1 >> b1 >> a2 >> b2;
 
-  for(int i=0; i<N; i++)
-    cin >> box[i];
+  int A = a1*b2 + a2*b1;
+  int B = b1 * b2;
 
-  v.push_back(box[0]);
+  int gcd = GCD(max(A, B), min(A, B));
 
-  for(int i=1; i<N; i++){
-    if(box[i] > v.back()) v.push_back(box[i]);
-    else{
-      int idx = lower_bound(v.begin(), v.end(), box[i]) - v.begin();
-      v[idx] = box[i];
-    }
-  }
-
-  cout << v.size();
+  cout << (A / gcd) << ' ' << (B / gcd);
 
   return 0;
+}
+
+int GCD(int a, int b){
+  while(true){
+    if(a % b == 0) return b;
+
+    int temp = a % b;
+    a = b;
+    b = temp;
+  }
 }
