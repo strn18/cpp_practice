@@ -1,6 +1,7 @@
 #include <iostream>
-#include <string>
-#define SRY "I'm Sorry Hansoo"
+#include <vector>
+#include <algorithm>
+#define ll long long
 
 using namespace std;
 
@@ -8,39 +9,47 @@ int main(){
   ios_base::sync_with_stdio(false);
   cin.tie(NULL);
 
-  string str;
-  int count[26] = {0};
+  int N;
+  vector<ll> v;
 
-  cin >> str;
+  cin >> N;
 
-  for(int i=0; i<str.size(); i++)
-    count[str[i]-'A']++;
-  
-  int oddAllow = (str.size()%2 == 0 ? 0 : 1);
-  int oddIdx = -1;
+  while(N--){
+    ll num;
 
-  for(int i=0; i<26; i++){
-    if(count[i]%2 == 1){
-      if(oddAllow == 0){
-        cout << SRY;
-        return 0;
+    cin >> num;
+
+    v.push_back(num);
+  }
+
+  sort(v.begin(), v.end());
+
+  int maxCount = 1;
+  ll maxVal = v[0];
+
+  int curCount = 1;
+  ll curVal = v[0];
+
+  for(int i=1; i<v.size(); i++){
+    if(v[i] != curVal){
+      if(curCount > maxCount){
+        maxCount = curCount;
+        maxVal = curVal;
       }
-      else{
-        oddAllow--;
-        oddIdx = i;
-      }
+      curCount = 1;
+      curVal = v[i];
+    }
+    else{
+      curCount++;
     }
   }
 
-  for(int i=0; i<26; i++)
-    for(int j=0; j<count[i]/2; j++)
-      cout << (char)('A' + i);
-  
-  if(oddIdx != -1) cout << (char)('A' + oddIdx);
+  if(curCount > maxCount){
+    maxCount = curCount;
+    maxVal = curVal;
+  }
 
-  for(int i=26; i>=0; i--)
-    for(int j=0; j<count[i]/2; j++)
-      cout << (char)('A' + i);
+  cout << maxVal;
 
   return 0;
 }
