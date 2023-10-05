@@ -53,3 +53,7 @@ int main(){
 
   return 0;
 }
+
+/*
+규칙 찾으면 쉬운 문제. 주어진 수열의 다음 수열을 만들어서 출력하면 된다. 풀이는 https://guiyum.tistory.com/29 여기랑 똑같다. 
+*/
