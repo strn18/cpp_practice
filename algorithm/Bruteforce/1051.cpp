@@ -41,3 +41,9 @@ bool valCheck(int row, int col, int len){
   if(board[row][col] != board[row + (len-1)][col + (len-1)]) return false;
   return true;
 }
+
+/*
+걍 브루트포스로 모든 정사각형을 다 찾아보면 된다. 그러면 O(N^3)인데, N이 작아서 충분히 가능. 
+꼭짓점의 수가 같은 가장 큰 정사각형의 넓이를 구하는 거니까, 정사각형의 한 변의 길이를 min(N, M)부터 시작해서 1씩 줄이면서 
+그걸 만족하는 정사각형이 있는지 찾아본다. 길이 2까지 찾아봤는데 없으면 길이 1에서는 무조건 있으니까 바로 1을 출력한다. 
+*/
