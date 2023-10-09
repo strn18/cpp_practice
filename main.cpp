@@ -1,43 +1,36 @@
 #include <iostream>
-#define MAX 50
+#include <algorithm>
+#define MAX 10
 
 using namespace std;
 
-int board[MAX][MAX];
-
-bool valCheck(int row, int col, int len);
-
 int main(){
-  // ios_base::sync_with_stdio(false);
-  // cin.tie(NULL);
+  ios_base::sync_with_stdio(false);
+  cin.tie(NULL);
 
-  int N, M;
+  int N;
+  int left[MAX+1], pos[MAX+1], result[MAX+1];
 
-  cin >> N >> M;
+  cin >> N;
 
-  for(int i=0; i<N; i++)
-    for(int j=0; j<M; j++)
-      scanf("%1d", &board[i][j]);
+  for(int i=1; i<=N; i++)
+    cin >> left[i];
   
-  for(int len = min(N, M); len >= 2; len--){
-    for(int row = 0; row + (len-1) < N; row++){
-      for(int col = 0; col + (len-1) < M; col++){
-        if(valCheck(row, col, len)){
-          cout << len * len;
-          return 0;
-        }
-      }
+  for(int i=1; i<=N; i++){
+    pos[i] = left[i];
+
+    sort(pos+1, pos+i);
+
+    for(int j=1; j<i; j++){
+      if(pos[j] <= pos[i]) pos[i]++;
+      else break;
     }
+
+    result[pos[i]] = i;
   }
 
-  cout << 1;
+  for(int i=0; i<N; i++)
+    cout << result[i] << ' ';
 
   return 0;
-}
-
-bool valCheck(int row, int col, int len){
-  if(board[row][col] != board[row][col + (len-1)]) return false;
-  if(board[row][col] != board[row + (len-1)][col]) return false;
-  if(board[row][col] != board[row + (len-1)][col + (len-1)]) return false;
-  return true;
 }
