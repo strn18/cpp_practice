@@ -45,3 +45,7 @@ void visit(int v){
 
   if(!visited[edge[v]]) visit(edge[v]);
 }
+
+/*
+백준 분류는 순열 사이클 분할이라고 하는데 그냥 dfs로 분류함. 
+*/
