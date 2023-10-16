@@ -23,7 +23,7 @@ int main(){
 
   sort(pos.begin(), pos.end());
 
-  cout << pos[ (pos.size() + 1) / 2 - 1 ];
+  cout << pos[ (pos.size() - 1) / 2];
 
   return 0;
 }
