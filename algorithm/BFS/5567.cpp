@@ -60,3 +60,7 @@ int bfs(int start, int maxDepth){
 
   return count;
 }
+
+/*
+걍 1번 노드를 시작으로 bfs를 쳐서, 1번 노드가 root일 때 depth가 2인 노드들까지만 세면 된다. 
+*/
