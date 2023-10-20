@@ -34,3 +34,8 @@ int main(){
 
   return 0;
 }
+
+/*
+원래 unordered_map을 자주 써서 이번에도 그걸로 했는데, 생각해보니 그냥 map을 쓰면 27행에서 그냥 e.second > ansCount 이것만 해주면 된다. 
+왜냐면 map이면 내부 원소를 key를 기준으로 오름차순 정렬 해주기 때문. 
+*/
