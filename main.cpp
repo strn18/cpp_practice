@@ -1,6 +1,5 @@
 #include <iostream>
-#include <string>
-#include <set>
+#define ll long long
 
 using namespace std;
 
@@ -8,22 +7,22 @@ int main(){
   ios_base::sync_with_stdio(false);
   cin.tie(NULL);
 
-  int N;
-  set<string, greater<string>> s1;
+  int n;
 
-  cin >> N;
+  while(cin >> n){
+    ll target = 1;
+    int digits = 1;
 
-  while(N--){
-    string name, info;
+    while(target % n){
+      target *= 10;
+      target++;
+      digits++;
 
-    cin >> name >> info;
+      target %= n;
+    }
 
-    if(info =="enter") s1.insert(name);
-    else s1.erase(name);
+    cout << digits << '\n';
   }
-
-  for(auto e: s1)
-    cout << e << '\n';
 
   return 0;
 }
